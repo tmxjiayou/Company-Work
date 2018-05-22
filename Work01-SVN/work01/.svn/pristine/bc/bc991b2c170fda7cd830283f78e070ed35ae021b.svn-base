@@ -1,0 +1,8 @@
+###jQuery总结
+（jQuery是一个javascript库）
+
+向您的页面添加jQuery库
+
+		<head>
+        	<script type="text/javascript" src="jquery.js"></script>
+		</head>

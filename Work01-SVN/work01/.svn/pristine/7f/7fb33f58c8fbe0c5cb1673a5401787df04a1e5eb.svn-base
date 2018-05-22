@@ -1,0 +1,6607 @@
+###javascript总结
+#####数据类型
+
+    Number(不区分整数和浮点数)
+    字符串
+    布尔值
+    null、undefined
+    数组
+    对象
+
+#####字符串
+
+    新增多行字符串表示方法（'...'）
+    模板字符串：你好${name}
+    操作字符串：s="hello worid" s[0]
+
+    toUpperCase()把一个字符串全部变为大写
+    toLowerCase()把一个字符串全部变为小写
+    indexOf()会搜索指定字符串出现的位置
+    substring()返回指定所以区间的子串
+
+#####数组
+
+     Array.length长度
+     indexOf()来搜索一个指定位置的元素
+     slice()截取Array的部分元素，然后返回一个新的Array
+     
+     push()向Array的末尾添加若干元素
+     pop()把Array的最后一个元素删除掉
+
+     unshift()往Array的头部添加若干元素
+     shift()把Array的第一个元素删掉
+
+     sort()可以对当前的Array进行排序
+
+     reverse()翻转Array的元素
+
+     splice()修改Array的万能方法，可以从索引开始删除若干元素，再从该位置添加若干元素 splice(2,3,'goole','facebook')
+
+     concat()把当前的Array和Array连接起来，返回一个新的Array
+
+     join()把当前的额每个元素用指定的字符串连接起来，然后返回连接后的字符串
+
+#####对象
+
+     无序的集合数据类型，若干键值对组成
+     若属性名为非有效的变量，就要用''括起来。用[]来访问
+     访问不存在的属性返回undefined
+
+     in 操作符 判断对象中是否存在某一属性
+     如果属性是继承过来的，那么仍然会返回true
+     要判断自身是否具有该属性则用.hasOwnProperty()方法判断
+
+#####条件判断
+
+     if(){...}else{...}
+     多条件判断时 为顺序执行 if{...}else{...}
+
+     javascript 把null、undefined、0、NaN、''、视为false
+
+#####循环
+ 
+     break退出死循环
+
+     for...in把一个对象的所有属性一次循环出来：
+
+     for(var key in o) {
+         alert(key);
+     }
+
+     过滤掉对象继承过来的属性 hasOwnProperty()
+     for(var key in o) {
+   		if(o.hasOwnProperty(key)){
+        	alert(key);
+      }
+     }
+
+     for...in也可以对Array循环  但是得到的是String 而不是 Number
+
+     while循环只有一个判断条件，条件满足就不断循环
+
+     do-while循环
+
+#####Map和Set
+
+     map(解决了对象中键值只可以字符串的问题)
+     是一组键值对的结构，具有极快的查找速度.set .has .get .delete
+
+     set和Map类似，也是一组Key的集合，但是不存储Value.由于key不能重复，所以在set中没有重复的key   
+     .add(key)  .delete(key)
+
+#####iterable
+
+     新的类型iterable(Array、Map、Set)
+     该类型通过for...of来遍历循环
+ 
+     for(var x of a) {
+		alert(x);
+     }
+
+     for...of遍历的是数组的元素，而for...in遍历的是数组的属性
+
+     更好的是直接使用iterable的内置的forEach方法，它接收一个函数，每次迭代自动回调该函数。
+    
+     var a=['A','B','C']
+     a.forEach(function(element,index,array){
+		alert(element);
+     });
+
+     Map的回调函数参数依次为value、key、map本身
+
+     var m=new Map([1,'x'],[2,'y'],[3,'r'])
+     m.forEach(function(value,key,map){
+     	alert(value);
+     })
+
+###函数
+
+#####函数的定义和调用
+
+     如果函数内部没有return语句，函数执行完之后也会返回结果，只是结果为undefined
+     
+     如果没有传递参数则X将收到undefined，计算结果为NaN
+
+     arguments只在函数的内部起作用，而且永远指向当前函数的调用者 传入的所有参数(要把中间参数B变为可选参数，就只能通过arguments判断，然后重新调整参数并赋值)。
+     
+     function foo(x) {
+		alert(x);
+		for(var i=0; i<argumrnts.length; i++) {
+    		alert(arguments[i]);
+		}
+      }
+
+     rest参数(获取除了指定参数外的多余的参数)
+
+     function foo(a,b,...rest){
+		console.log('a='+a);
+        console.log('b='+b);
+        console.log(rest);
+     }
+	 reset参数只能写在最后面，前面用...标识
+     如果没有就会为空
+
+#####变量的作用域
+
+	 如果一个变量在函数体内部申明，则该变量的作用域为整个函数体，在函数体外不可应用该变量
+	 
+	 由于javascript的函数可以嵌套，此时内部函数可以访问外部函数的定义的变量，反过来则不行
+
+	 JavaScript引擎自动提升了变量y的声明，但不会提升变量y的赋值
+
+	 全局作用域，默认的全局对象window，全局作用域的变量实际上被绑定到window的一个属性
+	 顶层的函数的定义也被视为一个全局变量
+
+	 局部作用域：为了解决块级作用域的，ES6引入了let  由此来代替var 可以申明一个块级作用域的变量
+
+		for(let i=0; i<100; i++) {
+
+		}
+
+	 使用const来定义常量，作用域仍然为块级作用域
+
+		const PI=3.14;
+
+#####方法
+
+	 对象的定义：
+	 var xiaoming = {
+		name: xiaoming;
+		brith: 1990;
+		age: function() {
+			var y=new Date().getFullYear();
+			return y-this.brith;
+		}
+	 }
+
+	 this是一个特殊的变量，它始终指向当前对象，也就是xiaoming这个变量。
+
+	 以对象的方法对方法进行调用的时候，xiaoming.age(),该函数的this指向被调用的对象，也就是xiaoming
+     如果单独调用函数，getAge(),此时函数指向全局对象
+	 在strict模式下，会得到的是undefined
+
+	 使用一个that变量首先对this进行捕获
+			
+		'use strict'
+		var xiaoming= {
+			name: 'xiaoming';
+			birth: 1990;
+			age: function() {
+				var that=this;
+				function getAgeFromBirth() {
+					var y=new Date().getFullYear();
+					return y-that.birth;
+				}
+
+				return getAgeFormBirth();
+			}
+		}
+
+   apply(在一个独立的函数调用中，根据是否是strict模式，this指向undefined、window,但是我们仍然可以控制this的指向)要指定函数的this指向哪个对象，可以用函数本身的apply方法，它接收两个参数，第一个为需要绑定的this变量，第二个参数是Array,表示函数本身的参数。
+
+		function getAge() {
+			var y=new Date().getFullYear();
+			return y-this.birth;
+		}
+
+		var xiaoming= {
+			name: 'xiamong',
+			birth: 1900,
+			age: getAge
+		}
+
+		xiaoming.age();
+		getAge.apply(xiaoming,[]);
+
+   另一个与apply()类似的方法是call()
+   apply()把参数打包成Array再传入
+   call()把参数按顺序传入
+
+		Math.max.apply(null,[3,4,5]);
+		Math.max.call(null,3,4,5);
+
+   装饰器：apply改变函数的行为
+
+		var count=0;
+		var oldParseInt=parseInt;
+		window.parseInt=function(){
+			count+=1;
+			return oldParseInt.apply(null,arguments);
+		};
+
+#####高阶函数
+
+   一个函数可以接收另一个函数作为参数，这种函数称之为高阶函数
+	
+		function add(x,y,f){
+			return f(x)+f(y);
+		} 
+
+   map/reduce
+   
+   map 如果把函数作用在一个数组上[1,2,3]上，就可以用map实现
+   map()方法定义在Javascript的Array的map()方法，传入我们自己的函数，就得到一个新的Array作为结果。
+
+		function pow(x) {
+			return x+x;
+		}
+
+		var arr=[1,2,3,4];
+		arr.map(pow);
+
+		var arr=[1,2,3,4];
+		arr.map(String);
+
+   reduce()  Array的reduce()把一个函数作用在这个Array的元素上，这个函数也必须接受两个参数，reduce()把结果继续和下一个元素做累计计算
+
+		[x1,x2,x3,x4].reduce(f)=f(f(x1,x2),x3),x4)
+
+   filter其为一个常用的操作，用于把Array的某些元素过滤掉，然后返回剩下的元素
+   filter()把传入的函数依次作用于每个元素，然后根据返回值是true、false，决定该元素是保留还是丢弃。
+
+		把一个array中的空字符串删掉
+
+		var arr=['a','',null,undefined,'c',''];
+		var r=arr.filter(function(s){
+			return s && s.trim();
+		});	
+	    arr;['a','c']
+   
+   filter()接收的函数，其实可以有多个参数。通常我们仅仅使用第一个参数，表示array的某个元素。回调函数还接收另外两个参数，表示元素的位置和数组本身
+
+		利用filter，可以巧妙的除去Array的重复元素
+		var r,
+		arr=["apple","apple"];
+		r=arr.filter(function(element,index,self){
+			return self.indexof(element)===index;
+		});
+
+   sort()排序算法。（x<y，返回-1）(x>y,返回1)（x==y,返回0）（默认转换为字符串后再排序）
+   默认的排序方法是根据ASCII码进行排序，所以会出现排序后出现[1,10,2,20]从首元素依次比较
+   利用sort()是一个高阶函数，可以接收一个比较函数来实现自定义排序
+
+		var arr=[10,20,1,2];
+		arr.sort(function(){
+			if(x<y){
+				return -1;
+			}
+
+			if(x>y){
+				return 1;				
+			}
+		
+			return 0;
+		}); 
+
+		若要把大数放在前面，则修改返回的-1、+1即可
+
+		忽略大小写来比较两个字符串，实际上是先把字符串都变成大写或者小写来比较
+		toUpperCase()调用这种方法
+		sort()方法会直接对Array进行修改，它返回的结果仍然是当前Array
+
+#####闭包：函数作为结果值返回
+   如果对数组不是立即求和，那么我们就可以返回函数
+
+		function lazy_sum(arr){
+			var sum=function(){
+				return arr.reduce(function(x,y){
+					return x+y;
+				});
+			}
+            return sum;
+		}
+
+		当我们调用lazy_sum(),返回的并不是求和的结果，而是求和函数
+		var f=lazy_sum([1,2,3,4,5]);返回的是求和函数
+		f();
+
+		我们在函数lazy_sum()中又定义了函数sum，并且内部函数sum可以引用外部的函数lazy_sum的参数和局部变量，当lazy_sum返回函数sum时，相关的参数和变量都保存在返回的函数中，这种称为"闭包（Closure）"的程序结构拥有极大的威力。每次调用时都会返回一个新的函数。
+
+		闭包：注意到返回的函数中在其内部的定义，引用了局部变量arr，所以，当一个函数返回了一个函数之后，其内部的局部变量还被新函数引用，所以闭包用起来简单，实现起来不容易，另一个需要注意的问题，返回的函数并没有立即执行，而是直到调用了f()才执行
+
+		function count() {
+			var arr=[];
+			for(var i=1; i<3; i++){
+				arr.push(function(){
+					return i*i;
+				});
+			}
+			return arr;
+		}
+
+		var results=count();
+		var f1=results[0];
+		var f2=results[1];
+		var f3=results[2];
+
+		实际的输出f1,f2,f3全部为16.原因就在于返回函数引用了变量i，但它并非立即执行。等到三个函数都返回的时候变量i已经变成4了，因此最终结果为16.
+
+		所以闭包，返回函数不要引用任何的循环变量，或者后续会发生变化的变量
+
+		如果一定要引用循环变量，方法就是再创建一个函数，用该函数的参数绑定循环变量当前的值
+
+		function count() {
+			var arr=[];
+			for(var i=1; i<3; i++){
+				arr.push((function(n){
+					return function(){
+						return n*n;
+					}
+				})(i));
+			}
+			return arr;
+		}
+
+		var results=count();
+		var f1=results[0];
+		var f2=results[1];
+		var f3=results[2];
+
+		此时可以正常的输出
+
+		借助闭包还可以封装一个私有变量
+
+		'use strict'
+		function create_counter(initial) {
+			var x=initial ||0;
+			return {
+				inc: function() {
+					x += 1;
+					return x;
+				}
+			}
+		}
+
+		var cl=create_counter();
+		cl.inc();
+		cl.inc();
+	
+		在返回的对象中，实现了一个闭包，该闭包携带局部变量x，并且，从外部的代码中无法访问到变量x
+
+		闭包还可以把多参数的函数变为单参数的函数
+
+#####箭头函数 Arrow Function
+
+		x => x*x
+		
+		function(x) {
+			return x * x;
+		}
+
+		若箭头函数包含多条语句时，{...}和return就不能省略了
+
+		如果参数不是一个，就需要用（）括起来
+
+		如果返回的是一个对象，那么要写为
+		x => ({ foo: x })
+
+		this箭头函数看上去是匿名函数的一种简写，但实际上，箭头函数和匿名函数的区别是：箭头函数内部的this值是词法作用域，由上下文确定。
+
+		var obj = {
+			birth: 1990;
+			getAge: function() {
+				var b=this.birth;
+				var fn=()=>new Date().getFullYear()-this.birth;(this指向obj对象)
+				return fn();
+			}
+		};
+		obj.getAge();
+
+		由于this在箭头函数中，已经按照词法作用域进行绑定了，所以用call()或者apply（）调用箭头函数时，无法对this进行绑定，及传入的第一个参数被忽略。
+      
+		var obj = {
+			birth: 1990;
+			getAge: function(year) {
+				var b=this.birth;
+				var fn=(y)=>y-this.birth;(this指向obj对象)
+				return fn.call({birth:2000},year);
+			}
+		};
+		obj.getAge(2015);//25
+
+#####generator(新的数据类型，可以返回多次)
+
+		定义如下：(generator由function*定义，并且除了return语句,还可以yield返回多次)
+		function* foo(x) {
+			yield x+1;
+			yield x+2;
+			return x + 3;
+		}
+		
+		function* fib(max) {
+			var t,
+				a = 0;
+				b = 1;
+				n = 1;
+			while(n<max) {
+				yield a;
+				t = a + b;
+				a = b;
+				b = t;
+				n ++;
+			}
+			return a;
+		}
+
+		fib(5);直接调用一个generator和调用函数不一样，fib(5)仅仅是创建了一个generator对象，还没有去执行它。
+		调用generator对象有两个方法，一是不断地调用generator对象的next()方法；
+		
+		var f = fib(5);
+		f.next();
+		f.next();
+		f.next();
+		f.next();
+		f.next();
+		next()方法会执行generator的代码，每次遇到yield x;就返回一个对象{value: x,done; true/false} 然后暂停。
+
+		二：直接调用for ...of循环，迭代generator对象，这种方式不需要我们自己判断 done
+		for(var x of fib(5)) {
+			console.log(x);
+		}
+
+		因为generator可以在执行过程中多次返回，所以其看上去就像一个可以记住的执行状态的函数，利用这一点，写一个generator就可以实现需要面向对象才能实现的功能
+
+		generator还有另外一个好处，就是把异步回调代码变成“同步”代码。
+
+		没有generator时：AJAX需要这么写代码：
+		ajax('http://url-1',data1,function(err,result) {
+			if(err) {
+				return handle(err);
+			}
+			ajax('http://url-2',data2,function(err,result) {
+			if(err) {
+				return handle(err);
+			}
+			ajax('http://url-3',data3,function(err,result) {
+				if(err) {
+					return handle(err);
+				}
+				return success(result);
+				});
+			}); 
+		});
+
+		有了generator后(代码看上去是同步的，实际上是异步的)
+		try {
+			r1 = yield ajax('http://url-1',data1);
+			r2 = yield ajax('http://url-2',data2);
+			r3 = yield ajax('http://url-3',data3);
+			success(r3);
+		}
+		catch (err) {
+			handle(err);
+		}
+
+###标准对象
+		
+   在javascript中一切都是对象。区分对象的类型，我们用typeof操作符获取对象的类型，其返回一个字符串。number、string、bolean、undefined、function有别于其他类型，特别注意null的类型是object，array的类型也为object {}也为object
+
+   包装对象 new来创建
+  
+		 var n=new Number(123);123生成了新的数据类型
+		 Boolean  String   虽然值没有发生变化，但是类型已经变为object了，即类型发生了变化  ===比较时返回false;
+
+   如果没有使用new 时，Number()、Boolean()、String()会被当做普通函数，把任何类型的数据转换为number,boolean,string类型（不为包装类型）
+
+		几个规则的遵守：
+		不要使用new Number() new Boolean() new String()创建包装对象；
+		用parseInt() parseFloat()来转换任意类型到number；
+		用String()来转换任意类型到string，或者直接调用某个对象的toString()方法
+		通常不必把任意类型转换为boolean再进行判断，因为可以直接写if (myVar){...}
+		typeof操作符可以判断出number boolean string function undefined
+		判断Array要使用Array.isArray(arr)
+		判断null请使用myVar === null
+		判断某个局部变量是否存在用typeof window.myVar === 'undefined'
+		判断null请使用myVar === null;
+		函数判断某个局部变量是否存在用typeof myVar === 'undefined'
+
+		null和undefined没有toString()方法
+		number对象调用toString()时注意
+
+		123..toString();
+		(123).toString();
+
+#####Date(对象用来表示时间和日期)
+
+		var now = new Date();
+		now.getFullYear();
+		now.getMonth();
+		now.getDate();
+		now.getDay()；
+		now.getHours();
+		now.getMinutes()；
+		now.getSeconds();
+		now.getMilliseconds();
+		now.getTime();
+
+		var d = new Date(2017,1,14,7,14);
+
+		解析一个符合ISO 8601格式的字符串
+		var d = Date.parse('2016-06-24T19:15:22.875+08:00');
+		但是其返回的不是Date对象，而是一个时间戳。可以把时间戳很容易的转化为一个Date;
+
+		var d = new Date(1435146562875);
+		d;
+
+		Date对象表示的时间总是按浏览器所在的时区显示的，不过我们既可以显示本地时间，也可以显示调整后的UTC时间
+
+		var d = new Date(1435146562875);
+		d.toLocaleString;
+		d.toUTCString;
+
+		获取时间戳：
+		if(Date.now) {
+			alert(Date.now());
+		} else {
+			alert(new Date().getTime());
+		}
+
+#####RegExp
+   正则表达式是一种用来匹配字符串的强有力的武器。设计思想为用一种描述性语言来给字符串定义一个规则，凡是符合规则的字符串，我们就认为它匹配了。否则该字符串就是不合法的。
+
+		判断一个email字符串是否合法：
+		创建一个匹配email的正则表达式
+		用该正则表达式去匹配用户的输入是否合法
+
+		\d可以匹配一个数字  \w可以匹配一个字母或者数字  .可以匹配任意字符
+		
+		*表示任意个字符  +表示至少一个字符  ？表示0个或1个字符 {n}表示n个字符  {n,m}表示n-m个字符  
+
+		\s表示匹配空格
+
+		特殊字符使用\进行转义
+
+   进阶：要做到更精确的匹配，可以用[]表示范围
+
+		[0-9a-zA-Z\_]可以匹配一个数字、字母或者下划线
+		[0-9a-zA-Z\_]+可以匹配至少由一个数字、字母或者下划线组成的字符串
+		[a-zA-Z\_\$][0-9a-zA-Z\_\$]*可以匹配由字母、下划线或者$开头，后面任意由一个数字、字母或者下划线、$组成的字符串，也就是javascript允许的变量名
+		A|B可以匹配A或者B
+		^表示行的开头 ^\d只能以数字开头
+		$表示行的结束 \d$必须以数字结束
+
+   创建正则表达式的方式有两种
+
+		直接通过写/正则表达式/
+		new RegExp('正则表达式')创建一个RegExp对象
+
+		var re1 = /ABC\-001/;
+		var re2 = new RegExp('ABC\\-001');
+		两者是一样的（第二种发法使用到了转义字符）
+
+		var re = /^\d{3}\-\d{3,8}$/
+		re.test('010-12345');//true
+		re.test('100 12344');//false
+
+		test()方法用于测试给定的字符串是否符合条件
+
+   切分字符串（用正则表达式切分字符串比用固定的字符更加灵活）
+
+		'a b     c'.split(/\s+/);//['a','b','c']
+		可以将不规范的输入转化为正确的数组 包括空格，逗号，分号等
+
+   分组（除了简单的判断是否匹配之外，正则表达式还有提取子串的强大的功能。用（）表示的就是要提取的分组（Group））
+		
+		var re= /^(\d{3})-(\d{3,8})$/;
+		re.exec('010-12345');//['010-12345','010','12345']
+		re.exec('010 12345');//null
+
+		在正则表达式中定义了组，就可以在RegExp对象上用exec()方法提取出子串来
+		匹配成功后返回的是Array  失败时返回null
+
+   贪婪匹配：匹配尽可能多的字符
+
+		var re = /^(\d+)(0*)$/
+
+		非贪婪时就可以用
+		var re = /^(\d+？)(0*)$/
+
+   全局搜索：g
+
+		var r1 = /test/g;
+
+		全局匹配可以多次执行exec()方法来搜索一个匹配的字符串。当我们指定g标志之后，每次运行exec(),正则表达式本身会更新lastIndex()属性，匹配到上次的最后的索引
+
+		var s = 'JavaScript, VBScript,JScript and ECMAScript';
+		var re=/[a-zA-Z]+Script/g;
+
+		re.exec(s);//['JavaScript']
+		re.lastIndex;//10
+
+		re.exec(s);//['VBScript']
+		re.lastIndex;//20
+
+   忽略大小写 i  执行多行匹配 m
+
+   邮箱的正则表达式
+		
+		var re = /^[\da-zA-Z]+([._-]\w+)*@([\da-zA-Z]+\.)+[a-zA-Z]{2,6}$/;
+
+   提取出带email的地址的名字
+
+		var re = /^<(.+?)>\s*([\da-zA-Z]+[._-]?\w+@[\da-zA-Z]+\.[a-zA-Z]{2,6})$/;
+
+#####JSON(JavaScript Object Notation)数据交换格式
+
+   JSON其实为javascript的子集，其数据类型为：
+   
+   number：和javascript的number完全一致
+   
+   boolean: 就是javascript的true或者false
+   
+   string:为javascript的string
+   
+   null: 为javascript的null
+   
+   array: 为javascript的array表示方式-[]
+   
+   object: 就是JavaScript的{...}表示方式
+
+		JSON的字符集必须是utf-8.为了统一解析，JSON的字符串规定必须用双引号"",Object的键也必须用""
+		javascript内置了JSON的解析
+
+		把任何对象序列化成一个JSON格式的字符串，这样才能通过网络传递给其他计算机
+
+		如果我们收到一个JSON格式的字符串，只需要把它反序列化成一个Javascript对象，就可以直接在Javascript中直接使用这个对象了
+
+   序列化：先把小明这个对象序列化成JSON格式的字符串
+
+		var xiaoming = {
+			name: '小明',
+			age: 14,
+			gender: true,
+			height: 1.65,
+			grade: null,
+			'middle-school':'\"W3C\"Middle school',
+			skills: ['javascript','java']
+		}
+
+		JSON.stringify(xiaoming);
+
+		可以加上参数，按缩进进行输出：
+		JSON.stringify(xiaoming，null,'');
+		
+		第二个参数用于控制如何筛选对象的键值，如果我们只想输出指定的属性可以传入Array
+		JSON.stringify(xiaoming，['name','skills'],'');
+
+		还可以传入一个函数，这样对象的每个键值对都会被函数先处理
+
+		function convert(key,value) {
+			if(typeof value === 'string') {
+				return value.toUpperCase();
+			}
+			return value;
+		}
+		JSON.stringify(xiaoming，convert,'');
+
+		精确控制如何序列化 给xiaoming这个对象定义一个toJSON()的方法，直接返回JSON应该序列化的数据
+
+		var xiaoming = {
+			toJSON: function() {
+				return {
+					'NAME':this.name,
+					'Age':this.age
+				};
+			}
+		};
+
+		
+		JSON.stringify(xiaoming);
+
+   反序列化：（拿到一个JSON格式的字符串，直接用JSON.parse()把它变成一个Javascript的对象）
+
+		JSON.parse('[1,2,3,true]');//[1,2,3,true]
+		JSON.parse('{"name":"xiaoming","age":14}');//Object{name:"xiaoming",age:14}
+		JSON.parse('true');//true
+
+		JSON.parse()还可以接受一个参数，用来转换解析出的属性
+
+		JSON.parse('{"name":"xiaomiang","age":14}',function(key,value) {
+			if(key ==='name') {
+				return value + '同学';
+			}
+			return value;
+		});
+
+###面向对象编程
+
+   javascript不区分类和实例的概念，而是通过原型（prototype）来实现面向对象的编程
+
+		var Student = {
+			name: 'robot',
+			height: 1.2,
+			run: function() {
+				console.log(this.name +　'is running');
+			}
+		};
+		
+		var xiaoming = {
+			name: 'xiaoming'
+		};
+
+		xiaomong.__proto__ = Student;//把xiaoming的原型指向了Student，看上去仿佛是继承下来的
+
+   JavaScript的原型链和JAVA的class的区别就是，它没有“class”的概念，所有的对象都是实例，所谓的继承关系是指把一个对象的原型指向另一个对象而已。
+
+   Object.create()方法可以传入一个原型对象，并创建一个基于该原型的新对象，但是新对象什么属性都没有，所以可以编写一个函数来创建xiaoming
+
+		var Student = {
+			name: 'Robot',
+			height: 1.2,
+			run: function() {
+				console.log(this.name + 'is running');
+			}
+		};
+
+		function createStudent(name) {
+			var s = Object.create(Student);
+			s.name = name;
+			return s;
+		}
+
+		var xiaoming = createStudent('小明');
+		xiaoming.run();
+		xiaoming.__proto__===Student//true
+
+		当判断一个对象是否具有自己的属性的时候可以用hasOwnPrototype方法进行判断是不是自己的属性，而不是从原型链上继承下来的。
+
+#####创建对象
+
+   javascript对每个创建的对象都会设置一个原型，指向它的原型对象
+   当我们使用obj.xxx 访问对象的属性时，JavaScript引擎首先在当前对象进行查找，如果没有找到，就到其原型对象上找，如果还没有找到，就一直追溯到Object.prototype对象，最后，如果还没有找到，就只能返回undefined。
+
+       arr->Array.prototype->Object.prototype--->null
+
+   	   由Array.prototype所定义的对象indexof（） shift()可以在所有的Array对象中直接调用这些方法。
+
+		function   原型链上有apply()方法
+
+   构造函数（除了直接调用{...}创建一个对象外，还可以用构造函数的方法来创建一个对象。用法是，先定义一个构造函数）
+
+		function Student(name) {
+			this.name = name;
+			this.hello = function() {
+				alert('hello,'+this.name+'!');
+			}
+		}
+
+		这确实是一个普通函数，但是在javascript中，可以用关键字new来调用这个函数，并返回一个对象
+
+		var xiaoming = new Student('小明');
+
+		如果不写new，这就是一个普通函数，它返回undefined。但是，如果写了new 它就变成了一个构造函数，绑定的this指向新创建的对象，并默认返回this。xiaoming还会从原型上获得一个constructor属性，它指向函数student本身。
+
+		让new　Student()创建的对象，共享同一个函数，可以节省很多内存，就直接将hello函数，移动到对象的原型链上即可，就是Student.prototype上。
+
+		修改代码如下：
+		function Student(name) {
+			this.name = name;
+		}
+
+		Student.prototype.hello = function () {
+			alert('hello' + this.name+'!');
+		};
+
+		还可以使用createStudent()函数，在内部将所有的new操作进行封装。
+
+		function createStudent(props) {
+			return new Student(props || {})
+		}
+
+		函数的优点是不需要用 new 来调用，二是参数非常灵活 。
+
+		var xiaoming = createStudent({
+			name: 'xiaoming';
+		});
+		
+
+#####yuan原型继承
+
+   对于原型进行扩展
+   通过借助一个中间对象，来实现正确的原型链，这个中间对象的原型链要指向Student.prototype中间对象可以用一个空函数F来实现
+
+		function PrimaryStudent(props) { 
+			Student.call(this,props);
+			this.grade = props.grade || 1;
+		}
+
+		function F() {
+		}
+
+		F.prototype = Student.prototype;
+
+		PrimaryStudent.prototype = new F();
+
+		PrimaryStudent.prototype.constructor = PrimaryStudent;
+
+		PrimaryStudent.prototype.getGrade = function() {
+			return this.grade;
+		};
+
+		var xiaoming = new PrimaryStudent({
+			name: '小明'，
+			grade: 2
+		});
+
+		xiaoming.__proto__===PrimaryStudent.prototype;//true
+		xiaoming.__proto__.__proto__===Student.prototype;//true
+
+		xiaoming instanceof PrimaryStudent;//true验证的继承关系
+		xiaoming instanceof Student;//true
+
+   这些继承关系还可以用一个函数inherits()封装起来
+
+		function inherits(Child,Parent) {
+			var F = function(){};
+			F.prototype = Parent.prototype;
+			Child.prototype = new F();
+			Child.prototype.constructor = child;
+		}
+
+		function Student(name) {
+			this.name = name;
+		}
+
+		Student.prototype.hello = function () {
+			alert('hello' + this.name+'!');
+		};
+
+		function PrimaryStudent(props) { 
+			Student.call(this,props);
+			this.grade = props.grade || 1;
+		}
+
+		inherits(PrimaryStudent, Student);//实现原型继承
+
+		PrimaryStudent.prototype.getGrade = function() {
+			return this.grade;
+		};//绑定其他方法到PrimaryStudent原型
+
+#####class继承
+
+   新的关键字class在ES6时被引进
+
+		用新的关键字class来编写Student类
+
+		class Student {
+			constructor(name) {
+				this.name = name;
+			}
+
+			hello() {
+				alert('hello, '+this.name+'!');
+			}
+		}//避免了代码的分散
+
+		var xiaoming = new Student('小明');
+		xiaoming.hello();
+
+   class的继承：（通过class编写代码就可以使用关键字extends实现继承）
+
+		class PrimaryStudent extends Student {
+			constructor(name,grade) {
+				super(name);//super调用父类的构造方法
+				this.grade = grade;
+			}
+
+			myGrade() {
+				alert('i am at grade'+this.grade);
+			}
+		}
+
+###浏览器
+ 
+   在编写javascript的时候，要充分考虑到浏览器的差异，尽量让同一份javascript代码可以在不同的浏览器中运行。不同的浏览器对javascript支持的差异主要是，有些API的接口不一样，比如ajax,file接口。
+
+#####浏览器对象
+
+   window对象不但充当全局作用域，而且表示浏览器窗口。
+   
+		innerWidth和innerHeight属性，可以获取浏览器窗口内部的宽度和高度。（除去了占位元素，菜单栏、工具栏）
+		outerWidth和outHeight属性，获取整个浏览器窗口的整个宽高
+
+   navigator表示浏览器的信息
+
+		navigator.appName: 浏览器名称
+		navigator.appVersion:  浏览器版本
+		navigator.language: 浏览器设置的语言
+		navigator.platform: 操作系统的类型
+		navigator.userAgent: 浏览器设定的User-Agent字符串
+
+   javascript对不存在的属性返回undefined的特性，直接用短路符号||进行运算
+
+   screen对象表示屏幕的信息，常用的属性有：
+ 
+		screen.width: 屏幕宽度，以像素为单位
+		screen.height: 屏幕的高度，以像素为单位
+
+   location对象表示当前页面的URL信息
+
+		location.href获取（http://www.example.com:8080/path/index.html?a=1&b=2#TOP）
+		获取各个部分
+
+		location.protocol; // 'http'
+		location.host; // 'www.example.com'
+		location.port; // '8080'
+		location.pathname; // '/path/index.html'
+		location.search; // '?a=1&b=2'
+		location.hash; // 'TOP'
+ 
+		要加载一个新的页面，可以调用location.assign().如果要重新加载当前页面，调用location.reload()方法非常便捷
+
+		'use strict';
+		if(confirm('重新加载页面'+location.href+'?')) {
+			location.reload();
+		} else {
+			location.assign('/discuss');
+		}
+
+   document表示当前页面。document对象为整个DOM树的根节点
+
+		要查找DOM树的某个节点，需要从document对象开始查找。最常用的查找就是根据ID和Tag Name.
+
+		getElementById()按照ID获取一个DOM节点和按照document.getElementsByTagName()  Tag名称获得一组DOM节点
+
+		document对象还有一个cookie属性，可以获取当前页面的Cookie
+		Cookie是由服务器发送的key-value标示符。因为HTTP协议是无状态的，但服务器要区分到底是哪个用户发送过来的请求，就可以用Cookie进行区分。
+
+		当一个用户登陆成功以后，服务器发送一个Cookie给浏览器，例如user=ABC123(加密的字符串）...，此后浏览器访问该网站时，会在请求头附上这个Cookie,服务器根据Cookie即可区分出用户
+
+		document.cookie;//对cookie进行读取
+
+		同时也造成了安全的问题，因为HTML中可以引入第三方的javascript代码，如果存在恶意代码时，就会造成信息的泄露
+
+		所以在服务器设置Cookie时，应该坚持使用httpOnly，此时的Cookie就不会再被javascrit读取。
+
+#####操作DOM
+   
+   更新、遍历、添加、删除  始终记住DOM是一个树形结构
+   在对DOM进行操作的时候我们应该首先获取到该DOM节点。最常用的方法document.getElementById()和document.getElementsByTagName()以及CSS选择器document.getElementsByClassName()
+
+		var cs = test.children;
+		var first = test.firstElemntChild;
+		var last = test.lastElementChild;
+
+   第二种方法是使用querySelector()和querySelectorAll()可以根据条件来获取节点
+
+		var q1 = document.querySelector('#q1');
+		var ps = q1.querySelectorAll('div.hightlighted > p');
+
+   更新DOM
+
+		拿到一个DOM节点时，我们可以对它进行更新
+		直接修改文本有两种方法
+		一：修改innerHTML属性，这个方式很强大，不但可以修改一个DOM节点的文本内容，还可以直接通过HTML片段修改DOM节点内部的子树。
+
+		var p = document.getElemntById('p-id');
+		p.innerHTML = 'ABC';
+		p.innerHTML = 'ABC<span style="color: red">RED</span>';//使用时注意，是否需要写入HTML。如果写入的字符串是通过网络拿到了，要注意对字符串的编码，来避免xss攻击
+
+		二：修改innerText或textContent属性，这样可以自动对字符串进行HTML编码，保证无法设置任何HTML标签
+
+		var p = document.getElementById('p-id');
+		p.innerText = "<script>alert("hi")</script>";//被自动设置HTML编码，无法设置该节点
+		两种方法的区别是 innerText不返回隐藏元素的文本，而textContent返回所有的文本
+
+		修改CSS也是经常要操作的  DOM节点的style属性对应所有的CSS，可以直接获取或者设置。注意将在JavaScript中无效的属性名，改为驼峰式命名fontSize;
+
+		var p = document.getElementById('p-id');
+		p.style.color = '#ff0000';
+		p.style.fontSize = '20px';
+		p.style.paddingTop = '2em';
+
+   插入DOM
+		
+		当我们获得某个DOM节点
+		如果节点为空 直接使用innerHTML即可以插入新的DOM节点
+		如果节点不为空，innerHTML会直接替换掉原来的所有的子节点
+		
+		插入新的节点   一：appendChild  把一个子节点添加到父节点的最后一个节点
+
+		<p id="js">javascript</p>
+		<div id="list">
+			<p id="java">Java</p>
+		</div>
+
+		把<p id="js">JavaScript</p>添加到<div id="list">的最后一项
+	
+		var 
+			js = document.getElementById('js'),
+			list = document.getElementById('list');
+		list.appendChild(js);//该节点会把原来位置的删除，然后插入到列表的最后的位置
+
+		haskell = document.createElement('p');
+
+		insertBefore(把子节点插入到指定的位置)
+		parentElement.insertBefore(newElement,referenceElemnt);子节点会插入到referenceElement之前
+
+		var
+			list = document.getElementById('list'),
+			ref = document.getElementById('python'),
+			haskell = document.createElement('p');
+		list.insertBefore(haskell,ref);
+
+		很多时候需要循环一个父节点的所有子节点，可以通过迭代children属性来实现
+
+		var 
+			i,c
+			list = document.getElementById('list');
+		for(i = 0; i<list.children.length; i++) {
+			c = list.children[i];
+		}
+
+		将几个同元素的字符串进行排列
+		var list = document.getElementById('test-list');
+		var arr = [];
+
+		for(var i = 0; i<list.children.length; i++) {
+			arr.push(list.children[i].innerText);
+		}
+
+		arr.sort();
+
+		for(var i = 0; i<arr.lenth; i++) {
+			list.children[i].innerText = arr[i];
+		}
+
+   删除DOM
+		
+		删除一个节点，首先获得该节点以及它的父节点，然后调用父节点的removeChild把自己删除掉
+		
+		var self = document.getElementById('to-be-removed');
+		var parent = self.parentElement;
+
+		var removed = parent.removeChild(self);
+		removed === self;//true
+
+		注意删除后的节点虽然不在文档树中，但其实它还在内存之中，可以随时被添加到别的位置
+
+		当你遍历一个父节点的所有子节点并进行删除操作的时候，要注意chilren属性只是一个只读属性，并且它在子节点变化时会实时更新
+		
+
+		<ul id="test-list">
+			<li>JavaScript</li>
+			<li>Swift</li>
+			<li>HTML</li>
+			<li>ANST C</li>
+			<li>CSS</li>
+		</ul>
+
+		把与不相关的web的技术节点删除点掉
+		var arr = ["Swift","ANST C"];
+		var parent = document.getElementById('test-list');
+		for(var i of parent.children) {
+			for(var y of arr) {
+				if(i.innerText === y) {
+					parent.removeChild(i);
+				}
+			}
+		}
+
+#####操作表单
+
+    表单本身也是DOM树，表单的输入框、下拉框可以接收用户的输入
+   	文本框： <input type="text">
+   	口令框： <input type="password">
+   	单选框： <input type="radio">
+   	复选框： <input type="checkbox">
+   	下拉框;  <select>
+    隐藏文本： <input type="hidden">
+
+		获取值：如果我们获得<input>的节点，就可以直接调用value获得对应的用户输入值
+		
+        var input = document.getElementById('email');
+		input.value;
+		可以应用于text password hidden select 
+
+		但对于单选框或者复选框，value返回的是预设的值，要获得用户输入的值，需要使用checked进行判断
+
+		<label><input type="radio" name="weekday" id="monday" value="1">monday</label>
+		<label><input type="radio" name="tuesday" id="tuesday" value="1">tuesday</label>
+
+		var mon = document.getElementById("monday");
+		var tue = document.getElementById("tuesday");
+
+		mon.value;
+		tue.value;
+		
+		mon.checked;
+		tue.checked;
+
+   设置值（对于text password hidden select  直接设置值即可）
+ 
+		<input type="text" id="email">
+		var input = document.getElementById('email');
+		input.value = "test@example.com";
+
+   HTML5控件（date datetime datetime-local color 都使用）
+
+		<input type="date" value="2015-07-01">
+		<input type="datetime-local" value="2017-07-01T02:03:04">
+        <input type="color" value="#ff0000">
+
+   提交表单：（两种方式来处理表单的提交）
+   
+		一：通过<form>元素的submit()方法提交一个表单（例如响应一个<button>的click事件）
+	
+		<form id="test-form">
+			<input type="text" name="test">
+			<button type="button" onclick="doSubmitForm()">Submit</button>
+		</form>
+
+		<script>
+			function doSubmitForm() {
+				var form = document.getElementById('test-form');
+				form.submit();
+			}
+		</script>
+
+		这种方式的缺点是扰乱了浏览器对form的正常提交，浏览器默认的点击<button type="submit">时提交表单
+
+		二：响应<form>本身的onsubmit事件。在提交form时做修改
+
+		<form id="test-form" onsubmit="return checkForm()">
+			<input type="text" name="test">
+			<button type="submit">Submit</button>
+		</form>
+
+		<script>
+			function checkForm() {
+				var form = document.getElementById('test-form')；
+
+				return true;
+			}
+		</script>
+
+		很多登录表单希望用户输入用户名和口令时，但是出于安全考虑，提交表单时不传输明文口令，而是口令的MD5。
+
+		<form id="login-form" method="post" onsubmit="return checkForm()">
+			<input type="text" id="username" name="usrname">
+			<input type="password" id="password" name="password">
+			<button type="submit">submit</button>
+		</form>
+
+		<script>
+			function checkForm() {
+				var pwd = document.getELementById('password');
+				pwd.value = toMD5(pwd.value);//把用户输入的明文变为MD5
+				return  true;
+			}
+		</script>
+
+		若不想改变用户的输入 可以用type=hidden 来实现
+		
+		<form id="login-form" method="post" onsubmit="return checkForm()">
+			<input type="text" id="username" name="usrname">
+			<input type="password" id="input-password" >
+			<input type="hidden" id="md5-password" name="password">
+			<button type="submit">submit</button>
+		</form>
+
+		<script>
+			function checkForm() {
+				var input_pwd = document.getELementById('input-password');
+				var md5_pwd = document.getELementById('md5-password');
+				md5_pwd.value = toMD5(input_pwd.value);//把用户输入的明文变为MD5
+				return  true;
+			}
+		</script>
+
+		同时没有标记name属性的input不会被提交，所以只有隐藏的，密码被提交了
+
+		表单校验：（用户名必须是3-10位的英文字母或者数字  口令必须是6-20位 两次口令必须一致）
+		
+		<form id="test-register" action="#" target="_blank" onsubmit="return checkRegisterForm()">
+			用户名：<input type="text" id="username" name="usrname">
+			口令：<input type="password" id="password" name="password" >
+			重复口令：<input type="password" id="password-2">
+			<button type="submit">submit</button><button type="reset">重置</button>
+		</form>
+
+		<script>
+			'use strict'
+			var checkRegisterForm() {
+				var username = document.getElementById('username');
+				var re1 = /^\w{3,10}$/;
+				var password = document.getElementById('password');
+				var re2 = /^.{6,20}$/;
+				var password2 = document.getElementById('password-2');
+				if(!re1.test(username.value)||!re2.test(password.value)||password.value!==password2.value) {	alert("错");
+					return flase;
+				}
+				else{alert{'对'}}
+			}
+		</script>
+
+#####操作文件
+
+   在HTML表单中，可以上传文件的唯一控件就是<input type="file"(当一个表单包含input type="file" 时，表单的enctype必须指定为multipart/form-data,同时method必须指定为post 浏览器才能以正确编码并以multipart/form-data格式发送表单数据)
+
+		通常上传的文件都由后台的服务器进行处理，javascript可以在提交表单时，对文件扩展名做检查。以便防止用户上传无效格式的文件。
+
+		var f = document.getELementById('test-file-upload');
+		var filename = f.value;//'C:/fakepath|test.png'
+		if(!filename||!(filename.endsWidth('.jpg'))||filename.endsWith('.png')||filename.endsWith('.gif')) {
+			alert('can only upload image file');
+			return false;
+		}
+
+   File API(随着HTML5的File和FileReader两个主要的对象，可以获取文件信息，并且读取文件)
+
+		var 
+			fileInput = document.getElementById('test-image-file'),
+			info = document.getElementById('test-image-file');
+			preview = document.getElementById('test-image-preview');
+
+		fileInput.addEventListener('change',function() {
+			preview.style.backgroundImage = '';
+			if(!fileInput.value) {
+				info.innerHTML = "没有选择文件";
+				return；
+			}
+			var file = fileInput.files[0];
+			info.innerHTML = '文件： '+ file.name +'<br>'+
+							 '大小： '+ file.size +'<br>'+
+							 '修改： '+ file.lastModifiedDate ;
+			if(file.type !== 'image/jpeg' && file.type !=='image/png' && file.type != 'image/gif') {
+				alert('不是有效的图片文件');
+				return;
+			}
+
+			var reader = new FileReader();
+     		reader.onload = function(e) {
+				var 
+					data = e.target.result;//base64编码  'data:image/jpeg;base64/9j/4AAQSK'
+				preview.style.backgroundImage = 'url('+data+')';
+			}
+			reader.readAsDataURL(file);
+		});
+
+		该例展示了如何通过html5的file API读取文件的内容。以DataURL的形式读到的文件是一个字符串。通常用于设置图像。如果需要服务器端处理，把字符串base64，后面的字符串发送给服务器并用Base64解码，就可以得到原始文件的二进制内容。
+
+   回调
+   
+   JavaScript的一个重要的特性就是单线程执行模式。
+   在javascript中，执行多任务实际上都是异步调用，比如上面的代码：
+		reader.readAsDataURL(file);
+   就会发起一个异步操作来读取文件的内容。因为是一步的操作所以我们并不知道什么时候结束，因此需要先设置一个回调函数
+
+		reader.onload = function(e) {
+			//当文件读取完成后，自动调用此函数；	
+		};//所以执行回调函数时，文件已经读取完毕，所以我们可以在回调函数的内部安全的获得文件的内容
+
+#####AJAX
+	
+   其不是javascript的规范，只是一个缩写：Asynchronous JavaScript and XML 就是用javascript执行异步请求网络
+
+   一个HTTP请求对应一个页面
+
+   如果要让用户留在当前页面，同时又发出新的HTTP请求，就必须用Javascript发送这个请求，接收到数据之后，再用javascript更新页面。这样用户就会感觉自己仍然留在当前页面，而数据可以不断的刷新
+
+   AJAX请求是异步执行的，也就是说，要通过回调函数获得响应。
+   在现代浏览器上写AJAX主要依靠XMLHttpRequest对象
+
+		'use strict'
+		function success(text) {
+			var textarea = document.getElementById('test-response-text');
+			textarea.value = text;
+		}
+
+		function fail(code) {
+			var textarea = document.getElementById('test-response-text');
+			textarea.value = 'Error code: '+code ;
+		}
+	
+		var request = new XMLHttpRequest()；//新建XMLHttpRequest对象
+		
+		request.onreadystatechange = function() {//状态发生变化时，函数被回调
+			if(request.resdyState === 4) {//成功完成   判断响应结果
+				if(request.status === 200) {
+					//成功，通过reponseText拿到响应的文本；
+					return success(request.responseText);
+				}else {
+					//失败，根据响应码判断失败的原因
+					return fail(request.status);
+				}
+			}else {
+				//HTTP请求还在继续
+			}													
+		}
+		
+		request.open('GET','/api/categories');//发送请求
+		request.send();
+
+		alert('请求已发送，请等待响应');
+
+   对于低版本的IE，需要换一个ActiveXObiect对象
+
+		var request = new ActiveXObject('Microsoft.XMLHTTP');//新建Microsoft.XMLHTTP对象
+
+   对于不知情的情况，可以进行判断
+
+		var request;
+		if(window.XMLHttpRequest) {
+			request = new XMLHttpRequest();
+		}else {
+			request = new ActiveXObject('Microsoft.XMLHTTP');
+		}
+
+   XMLHttpRequest对象的open()方法有三个参数，一个是GET或者POST  一个指定URL地址  一个参数指定是否使用异步 默认是true
+
+   最后调用send()方法真正的发送请求。GET请求不需要参数，POST请求需要把body部分以字符串或者FormData对象传进去
+
+   安全限制，例子中使用的是URL的相对路径。而使用绝对路径会报错。因为浏览器的同源策略导致的，默认情况下，javascript在发送AJAX请求时。URL的域名必须和当前页面的完全一致。
+   要求，域名相同，协议相同，端口号相同。
+
+   那如果请求外域的URL方法有以下几种
+
+		一：通过flash插件发送HTTP请求，其可以绕过浏览器的安全限制，
+
+		二：通过在同源域名下架设一个代理服务器来转发，javascript负责把请求发送到代理服务器
+
+		'/proxy?url=http://www.sina.com.cn'//代理服务器再把结果返回，这样就遵守了浏览器的同源域策略。麻烦之处在于需要服务器做额外的开发
+
+		三：称为JSONP 其有个限制，只能用GET请求，并且要求返回JavaScript。这种方式跨域，实际上是利用了浏览器允许跨域引用JavaScript资源
+
+		<html>
+			<head>
+				<script src="http://example.com/abc.js"></script>
+			</head>
+		</html>
+
+		JSONP通常以函数调用的形式返回，例如返回如下
+
+		foo('data');
+
+   这样我们如果在页面中先准备好了foo()函数，然后给页面加一个<script>节点，相当于动态的读取外域的JavaScript资源，最后就等着接收回调了
+
+   以163的股票查询为例，对于URL：http://api.money.126.net/data/feed/0000001,1399001?callback=refreshPrice   你将得到如下返回：
+	
+		refreshPrice({"0000001":{"code":"0000001",...}});
+
+		因此我们首先要准备好回调函数：
+
+		function refreshPrice(data) {
+			var p = document.getElementById('test-jsonp');
+			p.innerHTML = '当前价格： '+
+				data['0000001'].name +':' +
+				data['0000001'].price +':' +
+				data['1399001'].name +':' + 
+				data['1399001'].price 
+		}
+
+   最后用getPrice()函数触发
+
+		function getPrice() {
+			var
+				js = document.createElement('script');
+				head = document.getElementsByTagName('head')[0];
+			js.src = 'http://api.money.126.net/data/feed/0000001,1399001?callback=refreshPrice';
+			head.appendChild(js);
+		}
+
+		就完成了跨域加载数据
+
+   CORS（当浏览器支持HTML5，那么就可以一劳永逸的使用新的跨域策略：CORS）
+
+		CORS全称是Cross-Origin Resource Sharing 
+
+		发送请求后，浏览器收到响应之后，会检查Access-Control-Allow-Origin是否包含本域或者*
+		如果是则此次跨域请求成功，如果不是则请求失败，无法获得任何请求的数据
+
+		此种请求称之为简单请求，简单请求包括：GET HEAD POST（POST的Content-Type类型仅限于application/x-www-form-urlencode  multipart/form-data 和text/plain）,并且不能出现任何自定义的头
+
+		例子：
+		@font-face {
+			font-family: 'FontAwesome';
+			src: url('http://cdn.com/fonts/fontawesome.ttf')format('truetype');
+		}
+
+		如果该CDN服务商未正确设置Access-Control-Allow-Origin，那么浏览器无法加载字体资源
+
+        对于PUT、DELETE以及其他类型如application/json的POST请求，在发送AJAX请求之前，浏览器会现发送一个一个OPTIONS请求称为preflighted请求到这个URL上，询问目标服务器是否接受
+
+		OPTIONS/path/to/resource HTTP/1.1
+		Host: bar.com
+		Origin: http://my.com
+		Access-Control-Request-Method: POST
+
+		服务器必须明确指出允许的Method:
+
+		HTTP/1.1 200 OK
+		Access-Control-Allow-Origin: http://my.com
+		Access-Control-Allow-Methods: POST,GET,PUT,OPTIONS
+		Access-Control-Max-Age: 86400
+		
+		浏览器确认服务器响应的Access-Control-Allow-Methods头确实包含将要发送的AJAX请求的Method,才会继续发送AJAX，否则会抛出一个错误。
+
+		由于以POST、PUT方式传送JSON格式的数据在RESR中很常见，所以要跨域正确处理POST和PUT请求，服务器端必须正确响应OPTIONS请求。
+
+#####Promise
+
+   在javaScript的世界里，所有的代码都是单线程执行。
+   由于这个缺陷，导致javascript的所有的网络操作，浏览器事件，都必须是异步执行。异步执行可以用回调函数来实现：
+
+		function callback() {
+			console.log('Done');
+		}
+
+		console.log('before setTimeout()');
+		setTimeout(callback,1000);
+		console.log('after setTimeout()');
+
+		异步操作会在将来的某个时间点触发一个函数调用
+
+		AJAX就是典型的异步操作。
+		var ajax = ajaxGet('http://...');
+		ajax.ifSuccess(success)
+			.ifFail(fail);
+		这种链式写法的好处在于，先统一执行AJAX逻辑，不关心处理结果，然后根据结果是失败还是成功，在将来的某个时候调用success函数或者fail函数
+
+		Promise有各种开源实现，
+
+		'use strict';
+		new Promise(function(){});
+
+		alert('支持Promise');
+
+   我们先看一个最简单的Promise例子：生成一个0-2之间的随机数，如果小于1 ，则等待一段时间后返回成功，否则返回失败
+
+		function test(resolve, reject) {
+			var timeOut = Math.random()*2;
+			log('set time to: ' + timeOut + 'seconds.');
+			setTimeout(function() {
+				if(timeOut < 1) {
+					log('call resolve()...');
+					resolve('200 OK');
+				}
+				else {
+					log('call reject()...');
+					reject('timeOut in' + timeOut + 'seconds.');
+				}
+			}, timeOut * 1000);
+		}
+
+		其中的两个参数都是函数，执行成功后回调resolve（）；执行失败后回调reject();并不关心其内部的逻辑是如何实现的。
+
+		有了执行函数我们就可以用一个Promise对象来执行它，并在将来的某个时刻获得成功或失败的结果。
+
+		var p1 = new Promise(test);//变量p1是一个Promise对象，它负责执行test函数。由于test函数在内部是异步执行的。当函数成功时：
+		
+		var p2 = p1.then(function(result) {
+			console.log('成功：'+ result);
+		});
+
+		//当函数执行失败时
+		var p3 = p2.catch(function(reason) {
+			console.log('失败：' + reason);
+		});
+
+		Promise最大的好处是在异步执行的流程，把执行代码和处理结果的代码清晰的分离了
+
+   当有多步的异步任务时，不用Promise需要一层一层的嵌套代码。有了Promise,这样写：
+
+		job1.then(job2).then(job3).catch(hansleError);
+		其中job1、job2、job3都是Promise对象
+
+   以下的例子演示了如何执行一系列的需要异步计算获得结果的任务:
+
+		'use strict';
+
+		var logging = document.getElementById('test-promise2-log');
+		while(logging.children.length > 1) {
+			logging.removeChild(logging.children[logging.children.length - 1]);
+		}
+
+		function log(s) {
+			var p = document.createElement('p');
+			p.innerHTML = s;
+			logging.appendChild(p);
+		}
+
+		//0.5秒后返回input*inout的计算结果
+
+		function add(input) {
+			return new Promise(function(resolve, reject) {
+				log('calculating' + input + '+'  input + '...' );
+				setTimeout(resolve,500,input + input);
+			});
+		}
+
+		var p = new Promise(function () {
+			log('start new Promise...');
+			resolve(123);
+		});
+   
+		p.then(multiply)
+		 .then(add)
+		 .then(multiply)
+		 .then(add)
+		 .then(function(result) {
+				log('Got value: ' + result);
+		  });
+   
+   setTimeout可以看成一个模拟网络等异步执行的函数。现在，我们把上一节的AJAX异步执行的函数转化为Promise对象，看看用Promise如何简化异步处理
+
+		'use strict';//AJAX函数将返回Promise对象
+
+		function ajax(method, url, data) {
+			var request = new XMLHttpRequest();
+			request new Promise(function(resolve,reject) {
+				request.onreadystatechange = function() {
+						if(request.readyState === 4) {
+							if(request.status === 200) {
+								resolve(request.responseText);
+							}else {
+								reject(request.status);	
+							}	
+						}
+					};
+					request.open(method, url);
+					request.send(data);
+			});
+
+		}
+
+		
+		var log = document.getElementById('test- promise-ajax-result');
+		var p = ajax('GET','/api/categories');
+		p.then(function (test) {
+			log.innerText = text;
+		}).catch(function (status) {
+			log.innerText = 'ERROR:' + status;
+		});
+
+   除了串行执行异步任务外，Promise还可以并行执行异步任务
+   例如一个页面聊天系统，我们需要从两个不同的URL分别获得用户的个人信息和好友列表，用Promide.all()实现如下：
+
+		var p1 = new Promise(function (resolve, reject) {
+			setTimeout(resolve, 500, 'p1');
+		});
+
+		var p2 = new Promise(function(resolve, reject) {
+			setTimeout(resolve, 600, 'p2');
+		});
+
+		//同时执行p1 p2并在他们都完成之后执行then
+
+		Promise.all([p1,p2]).then(function (results) {
+			console.log(results);//获得一个ARRAY：['p1','p2']
+		});
+   
+   有些时候，多个异步任务是为了容错。比如，同时向两个URL读取用户的个人信息，只需要获得先返回的结果即可。这种情况下，用Promise.race()实现
+
+		var p1 = new Promise(function (resolve, reject) {
+			setTimeout(resolve, 500, 'p1');
+		});
+
+		var p2 = new Promise(function(resolve, reject) {
+			setTimeout(resolve, 600, 'p2');
+		});
+
+		Promise.race([p1,p2]).then(function (results) {
+			console.log(results);
+		);
+
+###Canvas
+
+   JavaScript在其上面进行画布
+   其定义了一个指定尺寸的矩形框，在这个范围内我们可以随意绘制
+
+		<canvas id="test-canvas" width="300" height="200"></canvas>
+
+   使用前可以用canvas.getContext来测试浏览器是否支持Canvas:
+
+		<canvas id="test-canvas" width="300" height="200"></canvas>
+
+		'use strict';
+		var canvas = document.getElementById('test-canvas');
+		if (canvas.getContext) {
+			alert('你的浏览器支持Canvas!');
+		} else {
+			alert('你的浏览器不支持Canvas!');
+		}
+
+   getContext('2d')方法让我们拿到一个CanvasRenderingContext2D对象，所有的绘图操纵都需要通过这个对象来完成：
+
+		var ctx = canvas.getContext('2d');
+
+   绘制3D图形
+		
+		g1 = canvas.getContext("webg1");
+
+   坐标系统  以左上角为原点，水平向右为X轴，垂直向下为Y轴，以像素为单位，所以每个点都是非负的整数
+
+		若干的方法来绘制图形：
+		'use strict';
+
+		var 
+			canvas = document.getElementById('test-shape-canvas'),
+			ctx = canvas.getContext('2d');
+
+		ctx.clearRect(0,0,200,200);//擦除改大小的矩形，吧区域变为透明
+		ctx.fillStyle = '#dddddd';
+		ctx.fillRect(10,10,130,130);//把(10，10)位置大小为130*130的矩形涂色
+        利用path绘制复杂路径：
+        var path = new Path2D();
+		path.arc(75,75,50,0,Math.PI*2,true);
+		path.moveTo(110,75);
+		path.arc(75,75,35,0,Math.PI,false);
+  		path.moveTo(65,65);
+		path.arc(60,65,5,0,Math.PI*2,true);
+		path.moveTo(95,65);
+		path.arc(90,65,5,0,Math.PI*2,false);
+  		ctx.strokeStyle = '#0000ff';
+		ctx.stroke(path);
+
+   还可以绘制文本和CSS完全一致：
+
+		ctx.clearRect(0,0,canvas.width, canvas.height);
+		ctx.shadowOffsetX = 2;
+		ctx.shadowOffsetY = 2;
+		ctx.shadowBlur = 2;
+		ctx.shadowColor = '#666666';
+		ctx.font = '24px Arial';
+		ctx.fillStyle = '#333333';
+		ctx.fillText('带阴影的文字'，20，40);
+
+   例子：请根据从163获取的JSON数据绘制最近30个交易日的K线图，数据已处理为包含一组对象的数组
+
+		'use strict';
+
+		window.loadStockData = function (r) {
+			var
+				NUMS = 30,
+				data = r.data;
+				if (data.length > NUMS) {
+					data = data.slice(data.length - NUMS);
+				}
+				data = data.map(function (x) {
+					return {
+						data: x[0],
+						open: x[1],
+						close: x[2],
+						high: x[3],
+						low: x[4],
+						vol: x[5],
+						change: x[6]
+					};
+				});
+				window.drawStock(data);
+		}
+
+		window.drawStock = function (data) {
+			var
+				canvas = document.getElementById('stock-canvas'),
+				width = canvas.width,
+				height = canvas.height,
+				ctx = canvas.getContext('2d');
+			console.log(JSON.stringify(data[0]));
+			                 {"date":"20150602","open":4844.7,"close":4910.53,"high":4911.57,"low":4797.55,"vol":62374809900,"change":1.69}
+		
+		
+		ctx.clearRect(0, 0, width, height);
+    	ctx.fillText('Test Canvas', 10, 10);
+		};
+
+		var js = document.createElement('script');
+		js.src = 'http://img1.money.126.net/data/hs/kline/day/history/2015/0000001.json?callback=loadStockData&t=' + Date.now();
+
+		document.getElemensByTagName('head')[0]
+		.appendChild(js);
+
+		使用canvas绘制最近30个交易日的K线图
+
+        canvas = document.getElementById('stock-canvas'),
+        width = canvas.width,
+        height = canvas.height,
+        ctx = canvas.getContext('2d');
+
+		ctx.fillStyle="#000000"; //设置画笔颜色为黑色
+		ctx.fillRect(0,0,width,height); //填充幕布
+
+		var candle_width=width/data.length; //定义蜡烛宽度
+		var ratio=0.5; //蜡烛缩放比例
+		var baseline=height/2;//定义基线
+
+		for(let i=0;i<data.length;i++){
+		var temp=data[i];
+		var up=(temp.close-temp.open>=0)?true:false; //今日上涨还是下跌
+		var candle_x=candle_width*i; //蜡烛的x坐标
+		var candle_height=Math.abs(temp.close-temp.open)*ratio; //蜡烛的高度
+		var candle_y=0; //蜡烛的y坐标
+
+		if (up){
+    		ctx.fillStyle="#ff0000"; //设置填充颜色
+    		ctx.strokeStyle="#ff0000";//设置线条颜色
+    		candle_y=baseline-candle_height; //蜡烛的y坐标
+    		ctx.fillRect(candle_x,candle_y,candle_width,candle_height); //画蜡烛的方块部分
+    		var stick_high_height=(temp.high-temp.close)*ratio; //上方火苗的高度
+    		var stick_low_height=(temp.open-temp.low)*ratio; //下方火苗的高度
+    		ctx.beginPath();
+    		ctx.moveTo(candle_x+candle_width/2,candle_y);
+   		 	ctx.lineTo(candle_x+candle_width/2,candle_y-stick_high_height);
+    		ctx.stroke(); //画上方火苗
+
+    		ctx.beginPath();
+    		ctx.moveTo(candle_x+candle_width/2,candle_y+candle_height);
+    		ctx.lineTo(candle_x+candle_width/2,candle_y+candle_height+stick_low_height);
+    		ctx.stroke(); //画下方火苗
+    		baseline=candle_y; //重新设置基线
+			}else{
+    		ctx.fillStyle="#00ff00";
+    		ctx.strokeStyle="#00ff00";
+    		candle_y=baseline;
+    		ctx.fillRect(candle_x,candle_y,candle_width,candle_height);
+    		ctx.beginPath();
+    		ctx.moveTo(candle_x+candle_width/2,candle_y);
+    		ctx.lineTo(candle_x+candle_width/2,candle_y-stick_high_height);
+    		ctx.stroke();
+    		ctx.beginPath();
+    		ctx.moveTo(candle_x+candle_width/2,candle_y+candle_height);
+    		ctx.lineTo(candle_x+candle_width/2,candle_y+candle_height+stick_low_height);
+    		ctx.stroke();
+    		baseline=candle_y+candle_height;
+			}
+			}
+
+###jQuery
+
+   消除浏览器差异：你自己不需要写冗长的代码来针对不同的浏览器来绑定事件，编写AJAX等代码
+
+   简洁的DOM操作方法： 写$('#test')肯定比document.getElementById('test')简洁
+
+   轻松实现动画、修改CSS等各种操作
+
+	 使用时只需要在头部对其进行引用即可
+
+		<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+   $符号是JQuery的别名   当被占用时我们就必须使用jQuery这个变量
+   调用jQuery.noConflict()时会把原来保存的变量还原
+
+#####选择器
+
+   选择器是jQuery的核心。一个选择器写出来类似$('#dom-id')
+   帮助我们快速定位到一个或多个DOM节点
+
+		按id查询：
+		var div = $('#abc');
+		返回的是jQuery对象，jQuery对象类似数组，它的每一个元素都是一个引用了DOM节点的对象
+
+		以上面的查找为例，如果id为abc的<div>存在，返回的jquery对象如下
+
+		[<div id="abc">...</div>]
+
+		如果不存在，则返回的jQuery对象如下[]其不会返回undefined或者null
+
+		可以将DOM对象转化为jQuery对象，这样就可以很方便的使用jQuery的API    $(aDomObject)
+
+		按tag查找：
+		var ps = $('p');
+
+		按class查找
+		var a = $('.red');
+
+		同时包含多个
+		var a = $('.red.green');
+
+
+		按属性查找
+		var email = $('[name=email]');
+		当属性中包含空格等特殊字符的时候，需要用双引号括起来，
+		还可以使用前缀查找或者后缀查找
+		var icons = $('[name^=icon]');
+
+		var names = $('[name$=width]');
+
+		使用组合查找器：例如查找<input>
+		var emailInput = $('input[name=email]');
+
+		同样根据tag和class来组合查询也很常见：
+		var tr = $('tr.red');
+
+		多项选择器（就是把多个选择器，组合起来一块用）
+		$('p,div');
+		$('p.red,p.green');
+
+#####层级选择器
+
+   除了基本的选择器之外，jQuery的层级选择器更加灵活，也更强大。因为DOM的结构就是层级结构，所以我们经常要根据层级关系来进行选择
+
+		层级选择器：（Descendant Selector）
+		如果两个DOM元素具有层级关系，就可以用$('ancestor descendant')来选择，层级之间用空格进行隔开。
+
+		$('ul.lang li.lang-javascript');
+		$('div.testing li.lang-javascript');
+
+		因为<div><ul>都是<li>的祖先节点，所以上面两种方式都可以选出相应的<li>节点
+
+		好处是其缩小了选择范围，因为首先要定位父节点，才能选择相应的子节点
+
+   子选择器：
+   
+   $('parent>child')类似层级选择器，但是限定了层级关系必须是父子关系就是child节点必须是parent节点的直属子节点
+
+   过滤器：
+
+		$('ul.lang li'); // 选出JavaScript、Python和Lua 3个节点
+
+		$('ul.lang li:first-child'); // 仅选出JavaScript
+		$('ul.lang li:last-child'); // 仅选出Lua
+		$('ul.lang li:nth-child(2)'); // 选出第N个元素，N从1开始
+		$('ul.lang li:nth-child(even)'); // 选出序号为偶数的元素
+		$('ul.lang li:nth-child(odd)'); // 选出序号为奇数的元素
+   
+   表单相关
+
+   针对表单元素，jQuery还有一组特殊的选择器：
+  
+		:input-><input><textarea><select><button>
+		:file:<input type="file">和input[type=file]一样
+		:checkbox  选择复选框和input[type=checkbox]
+		:radio  选择单选框 和input[type=radio]
+		:focus:可以选择当前输入焦点的元素 例如把光标放到<input>上就可以通过$('input:focus')就可以选出
+		：checked:获得当前勾上的单选框和复选框，用这个选择器可以立马获得用户选择的项目，$('input[type=radio]:checked');
+		:enabled:可以选择正常的输入的<input><select>等，也就是没有被灰掉的输入
+		：disabled  选择那些不能输入的的
+
+		$('div:visible');
+		$('div:hidden');
+
+#####查找和过滤
+
+   当我们拿到一个jQuery对象后，还可以以这个对象为基准，进行过滤和查找find()
+
+		var ul = $('ul.lang');
+		var dy = ul.find('.dy');
+		var swf = ul.find('#swift');
+
+		还可以用parent的方法进行向上查找：
+		var parent = swf.parent();
+
+		对于同一层级的节点，可以通过next()和pre()方法。
+
+		swift.next();
+		swift.next('[name=haskell]');
+		
+		swift.pre();
+
+   filter()方法  可以过滤掉不符合选择器条件的节点：
+
+		var langs = $('ul.lang li');
+
+		var a = langs.filter('.dy');
+
+		或者传入一个函数，要特别注意函数内部的this被绑定为DOM对象，不是jQuery对象
+
+		langs.filter(function () {
+			return this.innerHTML.indexOf('S')===0;//返回S开头的节点
+		});
+
+   可以用map()的方法把一个jQuery对象包含的若干DOM对象转化为其他对象
+
+		var arr = langs.map(function () {
+			return .this.innerHTML;
+		}).get();
+
+    此外，一个jQuery对象如果包含了不止一个DOM节点，first()、last()和slice（）方法可以返回一个新的jQuery对象，把不需要的DOM节点去掉。
+
+   用jQuery获取表单的JSON字符串，key和value分别对应每个输入的name和响应的value
+
+		'use strict';
+		var json = null;
+		json = {};
+		$('input:not(:radio),select').each(function() {
+			json[$(this).attr('name')] = $(this).val();
+		});
+		json = JSON.stringfy(json)
+
+###操作DOM
+
+   我们拿到jQuery对象之后，可以操作对应的DOM节点
+   修改text和HTML   text()   html()
+
+   对于test()是获取文本，传入参数是设置文本，HTML也有类似的操作
+		
+   即使没有获取到DOM对象，其也不会报错
+
+   修改CSS
+   jQuery对象可以进行批量操作，
+
+		'use strict';
+		$('#test-css li.dy>span').css('background-color','#ffd351').css('color','red');
+
+   jQuery对象的所有的方法都返回一个jQuery对象，这样我们可以进行链式调用，非常方便
+
+		var div = $('#test-div');
+		div.css('color');
+		div.css('color','#336699');
+
+   操作class
+
+		var div = $('#test-div');
+		div.hasClass('highlight');
+		div.addClass('highlight');
+		div.removelass('highlight');
+
+   显示和隐藏DOM
+   要隐藏一个DOM，我们可以设置CSS的display的属性为none，利用css（）方法就可以实现，不过，要显示这个DOM就需要回复原有的display属性，这就得先记下原有的display属性到底是block还是inline还是别的值
+
+   考虑到显示和隐藏DOM元素使用的非常普遍，jQuery直接提供了show()和hide（）方法，我们不用关心它是如何修改display属性的，总之它能够正常的工作。
+
+		var a = $('a[target=_black]');
+		a.hide();
+		a.show();
+
+   获取DOM信息   .width()  .height()
+
+   attr()和removeAttr()方法用于操作DOM节点的属性
+
+		div.attr('data');
+		div.attr('name');
+		div.attr('name','Hello');
+		div.removeAttr('name');
+
+   prop()方法和attr()方法类似
+   有一种属性可以没有值例如：checked  处理有些不同
+
+		radio.attr('checked');//checked
+		radio.prop('checked');//true
+
+		类似的属性还有selected,处理时最好用is(':selected')
+
+   操作表单：
+
+   对于表单对象，jQuery对象统一提供val()方法获取和设置对应的value()属性：
+
+		input.val();
+		input.val('abc@example.com');
+
+		select.val();
+		select.val('sh');
+
+		textarea.val();
+		textarea.val('hi');
+
+#####修改DOM结构
+
+   直接使用浏览器提供的api对DOM结构进行修改，不但代码复杂，而且要针对浏览器写不同的代码：有了jquery就不用在乎其是如何完成的
+
+   添加dom  添加新的DOM节点，除了通过jQuery的html()这种暴力的方法外，还可以使用append()方法：
+
+		var ul = $('#test-div>ul');
+
+		然后调用append()传入HTML片段：
+
+		ul.append('<li><span>Haskell</span></li>');
+		除了接受字符串，append()还可以传入原始的DOM对象，jQuery对象和函数对象
+
+		ul.append($('#scheme'));
+
+		ul.append(function(index,html) {
+			return '<li><span>Language - '+index+'</span></li>';
+		});
+
+		传入函数时，要求返回一个字符串、DOM对象、jQuery对象。因为jQuery的append()可能作用于一组DOM节点，只有传入函数才能对每个DOM生成不同的子节点。
+
+		append()把DOM添加到最后，prepend()则把DOM添加到最前
+
+		同级的节点可以用after()和before()方法
+
+   删除节点
+   要删除节点DOM，拿到jQuery对象后直接调用remove()方法就可以了。如果其包含若干个，则可以一次性删除多个节点。
+
+		var li = $('#test-div>ul>li');
+		li.remove();
+
+		'use strict';
+		var li = $('#test-div>ul>li');
+		var arr = ['Pascal','Lua','Ruby'];
+		var i;
+		for(i=0; i<li.length; i++) {
+			arr.push(li[i].innerText);
+		}
+		arr.sort();
+		li.remove();
+		var ul = $('#test-div>ul');
+		arr.forEach(function(item,index) {
+			ul.append('<li><sapn>+item+</sapn></li>');
+		})
+
+#####事件:
+
+   浏览器在接收用户的鼠标或者键盘输入之后，会自动的在对应的DOM节点上触发相应的事件。如果该节点已经绑定了对应的javascript处理函数，该函数会自动调用。
+
+		<a id="test-link" href="#0"></a>
+
+		var a = $('#test-link');
+		a.on('click',function() {
+			alert('hello!');
+		});
+		a.click(function() {
+			alert('hello');
+		});
+
+		鼠标事件：
+		click:鼠标单击时触发
+		dbclick:鼠标双击时触发
+		mouseenter:鼠标进入时触发
+		mouseleave: 鼠标移除时触发
+		mousemove: 鼠标在DOM内部移动时触发
+		hover:鼠标进入和退出时触发的两个函数，相当于上面两个函数的叠加
+		
+   		键盘事件
+		键盘事件仅作用在当前焦点的DOM上：通常是<input>
+		<textarea>
+		keydown: 键盘按下时触发
+		keyup: 键盘松开时触发
+		keypress: 按一次键时触发
+
+		其他事件：
+		focus: 当DOM获得焦点时触发
+		blur: 当DOM失去焦点时触发
+		change: 当<input><select><textarea>的内容改变时触发
+		submit:当form 提交时触发
+		ready 当页面被载入并且DOM树完成初始化之后触发
+
+		其中ready仅作用于document对象，由于ready事件在DOM完成初始化之后触发，且只触发一次，所以非常适合来写其他的初始化代码，
+
+		$(document).ready(function() {
+			$('#testForm').submit(function(){
+				alert('submit!');
+			});
+		});
+
+		常见形式：$(function() {
+				...
+		});
+
+   事件参数：
+		有些事件 如mousemove keypress 我们需要获得鼠标的位置和按键的值，否则这下监听就没有什么意义，所有的事件都会传入Event对象作为参数，可以从event对象上获取到更多的信息
+
+		$(function() {
+			$('#testMouseMoveDiv').mousemove(function(e){
+				$('#testMouseMoveSpan').text('pageX = '+e.pageX+',pageY = '+e.pageY);
+			});
+		});
+
+   取消事件的绑定：off('click',function)
+
+		setTimeout(function() {
+			a.off('click',hello);//10秒钟之后解除绑定
+		},1000);//可以一次性移除所有的click点击事件
+
+   无参数调用off（）可以一次性移除所有已绑定的所有类型的事件处理函数
+
+   事件触发条件
+		
+		用户在文本框内输入时，就会触发事件，而使用javascript代码去修改文本框的值，将不会触发change事件
+		javascript也可以直接调用无参数的change()方法来触发该事件
+		
+		input.change();
+
+   浏览器安全限制
+
+   对如下 的form表单：
+		<!-- HTML结构 -->
+		<form id="test-form" action="test">
+    	<legend>请选择想要学习的编程语言：</legend>
+    	<fieldset>
+        	<p><label class="selectAll"><input type="checkbox"> <span class="selectAll">全选</span><span class="deselectAll">全不选</span></label> <a href="#0" class="invertSelect">反选</a></p>
+        	<p><label><input type="checkbox" name="lang" value="javascript"> JavaScript</label></p>
+        	<p><label><input type="checkbox" name="lang" value="python"> Python</label></p>
+        	<p><label><input type="checkbox" name="lang" value="ruby"> Ruby</label></p>
+       		<p><label><input type="checkbox" name="lang" value="haskell"> Haskell</label></p>
+        	<p><label><input type="checkbox" name="lang" value="scheme"> Scheme</label></p>
+        	<p><button type="submit">Submit</button></p>
+    	</fieldset>
+		</form>
+
+		绑定合适的事件处理函数，实现以下逻辑：
+
+		当用户勾上“全选”时，自动选中所有语言，并把“全选”变成“全不选”；
+
+		当用户去掉“全不选”时，自动不选中所有语言；
+
+		当用户点击“反选”时，自动把所有语言状态反转（选中的变为未选，未选的变为选中）；
+
+		当用户把所有语言都手动勾上时，“全选”被自动勾上，并变为“全不选”；
+
+		当用户手动去掉选中至少一种语言时，“全不选”自动被去掉选中，并变为“全选”。
+
+		'use strict';
+		
+		var 
+			form = $('#test-form'),
+			langs = form.find('[name=lang]'),
+			selectAll = form.find('label.selectAll :checkbox'),
+			selectAllLbel = form.find('label.selectAll span.selectAll'),
+			deselectAllLabel = form.find('label.selectAll sapn.selectAll'),
+			invertSelect = form.find('a.invertSelect');
+
+			重置初始化状态：
+			form.find('*').show().off();
+			form.find(':checkbox').prop('check',false).off();
+			deselectAllLabel.hide();
+			//拦截form提交事件
+
+			form.off().submit(function(e) {
+				e.preventDefault();
+				alert(form.serialize());
+			});
+
+			function updateLabel() {
+				let allChecked = langs.filter(':checked').length===langs.length
+				selectAll.prop('checked',allChecked)
+				if(allChecked) {
+						selectAllLabel.hide()
+						deselectAllLabel.show()
+					}else{
+						selectedAllLabel.show()
+						deselectAllLabel.hide()
+					}
+				}
+
+			selectAll.change(function(e) {
+				langs.prop('checked',$(this).is(':checked'))
+				updateLabel()
+			})
+
+			invertSelect.click(function(e) {
+				langs.click()
+			})
+
+			langs.change(()=>updateLabel())
+
+#####动画
+
+   用javascript实现动画，原理非常简单，我们只需要以固定的时间间隔，每次把DOM元素的CSS样式修改一下，看起来就像动画了
+
+   使用jQuery实现动画，代码已经简单的不能再简化了，只需要一行代码
+   内置的几种动画的样式：
+	
+		show/hide
+		直接以无参数形式调用show()和hide()，会显示和隐藏DOM元素。但是，只要传递一个时间参数进去，就变成了动画
+
+		var div = $('#test-show-hide');
+		div.hide(3000);//在三秒钟内逐渐消失
+
+		时间以毫秒为单位，但也可以是'slow','fast'这些字符串
+		div.show('slow');//0.6秒钟内逐渐显示
+
+		toggle()方法则根据当前的状态决定是show()还是hide()
+
+		slideUp/slideDown
+		你可能已经看出来show()和hide()是从左上角逐渐展开或收缩的的
+		而slideUp()和slideDown()则是垂直方向逐渐展开或收缩的。
+		slideToggle()根据元素是否可见来决定下一步动作
+
+		div.slideUp(3000);//在3秒钟内逐渐向上消失
+
+		fadeIn/fadeOut
+		fadeIn()和fadeOut()的动画效果是淡入淡出，也是不断的设置DOM元素的opacity属性来实现，而fadeToggle()则根据元素是否可见来决定下一步的而动作
+
+		div.fadeut('slow');//在0.6秒内淡出
+
+		自定义动画：animate()可以实现任意的动画效果，我们需要传入参数就是DOM元素最终的CSS状态和时间，jQuery在时间段内不断地调整CSS直到达到我们设定的值
+
+		div.animate({
+			opacity: 0.25,
+			width: '256px',
+			height: '256px'
+		},3000);//在3秒钟内CSS过渡到设定值
+
+		animate()还可以再传入一个函数，当动画结束时，该函数将被调用
+		
+		div.animate({
+			opacity: 0.25,
+			width: '256px',
+			height: '256px'
+		},3000,function() {
+			console.log('动画已经结束');
+			$(this).css('opacity','1.0').css('width','128px').css('height','128px');
+		});
+
+		实际上这个回调函数参数对于基本动画也是适用的
+		有了animate（）你就可以实现各种自定义的动画
+
+		串行动画：
+		jQuery的动画效果还可以串行执行，通过delay()方法可以实现暂停，这样我们可以实现更复杂的动画效果，而代码却是非常简单
+
+		div.slideDown(2000)
+		   .delay(1000)
+		   .animate({
+				width: '256px',
+				height: '256px'
+			},2000)
+		   .delay(1000)
+		   .animate({
+				width: '128px',
+				height: '128px'
+			},2000);
+
+		因为动画需要执行一段时间，所以jQuery必须不断地返回promise对象才能后续的操作。简单的吧动画封装在函数中是不够的
+
+		有的动画如slideUp()根本没有效果。这是因为Javascript动画的原理是改变CSS的值，如height从100px逐渐变为0.但是很多不是block性质的DOM元素，对它们设置的height根本就不起作用，所动画就没有效果。
+
+		jQuery也没有实现对background-color的动画效果，用animate()设置background-color也没有效果，这种情况下可以使用CSS3的transition实现动画效果
+
+		在执行删除操作的时候，给用户显示一个动画比直接调用remove()要更好。请在表格删除一行的时候添加一个淡出的效果
+
+		'use strict';
+		function deleteFirstTR() {
+			var tr = $('#test-table>tbody>tr:visible').first();
+		}
+
+		tr.fadeOut('slow',function(){
+			$(this).remove();
+		})
+
+		deleteFirstTR();
+
+#####AJAX
+
+   应该说传统的请求发出者是一个页面，发出的页面同时会处于不可用状态，等待数据刷新。Ajax中的异步请求发出者是页面中的一个HttpRequest对象，页面本身的显示和操作在请求和接收数据的过程中不受影响。
+
+   这是我对Ajax中HTTP请求的描述，通过这段描述可以很好的解释Ajax带来平滑刷新效果和良好用户体验的原因。
+
+   使用jQuery的相关对象来处理AJAX，不但不需要考虑浏览器的问题，代码也能大大简化
+
+   ajax  jQuery在全局对象jQuery（也就是$）绑定了ajax()函数，可以处理AJAX请求。ajax(url,settings)函数需要接收一个URL和一个可选的settings对象，常用的选项如下：
+
+		async: 是否异步执行AJAX请求，默认是true,千万不要指定为false
+
+		method: 发送的Method,缺省为'GET',可指定为'POST'、'PUT'等。
+
+		contentType:发送POST请求的格式，默认值为'application/x-www-form-urllencoded;charset=UTF-8',也可以指定为text/plain、application/json;
+
+		data: 发送的数据，可以是字符串、数组或object。如果是GET请求，data将被转换成query附加到URL上，如果是POST请求，根据contentType把data序列化成合适的格式
+
+		headers: 发送额外的HTTP头，必须是一个object
+
+		dataType: 接收数据的格式，可以指定为： 'html' 'xml'
+		'json' 'text'等，缺省的情况下根据响应的content-Type猜测
+
+
+		下面的例子发送一个GET请求，并且返回一个JSON格式的数据
+		var jqxhr = $.ajax('/api/categories',{
+			dataType: 'json'
+		});//请求已经发送
+
+		处理回调函数返回的数据和出错时的响应？
+		jQuery的jqXNR对象类似一个Promise对象，我们可以用链式写法来处理各种回调：
+
+		'use strict';
+		function ajaxLog(s) {
+			var txt = $('#test-response-text');
+			txt.val(txt.val()+'\n'+s);
+		}
+		
+		$('#test-resopnse-text').val('');
+		var jqxhr = $.ajax('/api/categories',{
+			dataType: 'json'
+		}).done(function (data) {
+			ajaxLog('成功，收到数据：'+JSONstringify(data));
+		}).fail(function(xhr, status) {
+			ajaxLog('失败： '+xhr.status+',原因：'+status);
+		}).always(function(){
+			ajaxLog('请求完成： 无论成功或失败都会调用');
+		});
+
+   GET
+   对常见的AJAX操作，jQuery提供了一些辅助方法。由于GET请求最常见，所以jQuery提供了get()方法，可以这么写：
+
+		var jqxhr = $.get('/path/to/resource',{
+			name: 'Bob Lee',
+			check: 1
+		});
+
+		第二个参数如果是object，jQuery自动把它变成query string然后加到URL后面，实际的URL是
+
+		/path/to/resource?name=Bob%20Lee&check=1
+
+   POST
+   post()和get()类似，但是传入的第二个参数默认被序列化为
+   application/x-www-form-urlencoded:
+
+		var jqxhr = $.post('/path/to/resource',{
+			name: 'Bob Lee',
+			check: 1
+		});
+
+		实际构造的数据name=Bob%20Lee&check=1作为POST的body被发送
+
+   getJSON
+   由于JSON用的越来越普遍，所以jQuery也提供了getJSON()方法来快速的通过GET获取一个JSON对象
+
+		var jqxhr = $.getJSON('/path/to/resource',{
+			name: 'Bob Lee',
+			check: 1
+		}).done(function(data) {
+			//data已经被解析为JSON对象了
+		});
+
+   安全限制
+   jQuery的AJAX完全封装的是javascript的AJAX操作，所以它的安全限制和前面讲的用javascript写AJAX完全一样
+
+   如果需要使用JSONP，可以在ajax()中设置jsonp:'callback',
+   让jQuery实现JSONP跨域加载数据
+
+#####扩展:
+   答案是肯定的，我们可以扩展jQuery来实现自定义的方法。将来如果要修改高亮的逻辑，只要修改统一的扩展的代码。这种方式也称为编写jQuery插件
+
+   编写jQuery插件：
+ 
+   给jQuery对象绑定一个新方法是通过$.fn对象实现的。让我们来编写第一个扩展-highlight1()
+
+		$.fn.highlight1 = function() {
+			//this已绑定为当前的jQuery对象
+			this.css('backgroundColor','#fffced').css('color','#d85030');
+			return this;
+		}
+
+		注意到函数内部的this 在调用的时候被绑定为jQuery对象，所以函数内部代码可以正常调用所有jQUery对象的方法。
+
+   最后return this  因为jQuery对象支持链式操作，我们自己写的扩展方法也要能继续链式下去：
+
+		$('span.h1').highlight1().slideDown();
+
+   当用胡希望颜色由自己来定义的时候，我们可以给方法加一个参数，让用户自己把参数用对象传进去。于是我们有了第二个版本highlight2()
+
+		$.fn.highlight2 = function(options) {
+			//要考虑到各种情况
+			//options为undefined
+			//options只有部分key
+			var bgcolor = options && options.backgroundColor||'#fffced';
+			var color = options && options.color||'#d85030';
+			this.css('backgroundColor',bgcolor).css('color',color);
+			return this;
+		}	
+
+		对于默认值的处理，我们用了一个简单&&和||短路操作符，总能得到一个有效的值
+
+		另一种方法是使用jQuery提供的辅助的方法$.extend(target,obj1,obj2,...),它把多个object对象的属性合并到第一个target对象中，遇到同名的属性，总是使用靠后的对象的值，也就是越往后优先级越高
+
+		var opts = $.extend({},{
+			backgroundColor: '#00a8e6',
+			color: '#ffffff'
+		},options);
+
+		还可以传入默认的参数，使用时再修改
+		$.fn.highight = function(options) {
+			var opts = $.extend({},$fn.highlight.defaults,options);
+			this.css('backgroundColor',opts.backgroundColor).css('color',opts.color);
+			return this;
+		}//合并默认值和用户设定值
+
+		$.fn.highlight.defaults =  {
+			color: '#d85030',
+			backgroundColor: '#fff8de'
+		}
+
+		这次用户就可以使用时，只需要一次性设定默认值：
+
+		$.fn.highlight.defaults.color = '#fff';
+
+		$.fn.highlight.defaults.backgroundColor = '#000';
+
+   编写jQuery插件的原则：
+   给$.fn绑定函数，实现插件的代码逻辑
+   插件函数最后要return this;以支持链式调用
+   插件函数要有默认值，绑定在$.fn.<pluginName>.defaults上，
+   用户在调用时可传入设定值以便覆盖默认值
+
+   针对特定元素的扩展
+
+		如：submit()只能针对form
+		jQUery的选择器支持filter()方法来过滤，借助这个方法来实现针对特定元素的扩展
+
+		先写出用户调用的代码：
+		$('#main a').external();
+
+		然后按上面的方法编写一个external扩展
+
+		$.fn.external = function() {
+			return this.filter('a').each(function() {
+				var a = $(this);
+				var url = a.attr('href');
+				if(url && (url.indexOf('http://')===0||url.indexOf('https://')===0)) {
+					a.attr('href','#0')
+					 .removeAttr('target')
+					 .append('<i class="uk-icon-external-lnk"></i>')
+					 .click(function() {
+						if(confirm('你确定要前往'+url+'?')){
+							window.open(url);
+						}
+					});
+				}
+			});
+				
+		}
+
+#####错误处理
+
+   在执行JavaScript代码的时候，有些情况下会发生错误
+		
+		错误分为两种，一种是程序写的逻辑不对，导致代码执行异常
+
+		var s = null;
+		var len = s.length;//null变量没有length属性
+
+		一种是执行过程中，程序可能遇到无法预测的异常情况而报错。例如网络中断，读取不存在的文件，没有操作权限
+
+		对于这种错误我们需要处理，并可能需要给用户反馈
+		错误处理是程序设计时必须要考虑的问题。对于c这样贴近底层的语言，错误是通过错误码返回的
+
+		int fd = open("/path/to/file",O_RDONLY);
+		if(fd == -1) {
+			printf("Error when open file");
+		}else {
+
+		}//open()函数约定返回-1表示错误
+
+   try...catch...finally
+
+		'use strict';
+		var r1,r2, s = null;
+		try {
+			r1 = s.length;//此处应产生错误
+			r2 = 100;//该语句不会执行
+		} catch(e) {
+			alert('出错了： '+ e);
+		} finally {
+			console.log('finally');
+		}
+		console.log('r1 = '+r1);//r1应为undefined
+		console.log('r2 = '+r2);//r2应为undefined
+
+		当代码块被try{...}包裹的时候，就表示这部分代码执行过程中可能会发生错误，一旦发生错误，就不再继续执行后续的代码，转而跳到catch()块。catch（e）{...}包裹的代码就是错误处理代码，变量e表示捕获到的错误。最后无论有没有错误，finally都会被执行
+
+		有错误发生时，执行的流程
+		先执行try{...}代码
+		执行到出错的语句的时候，后续的语句不再继续执行，转而执行catch(e){...}代码；
+		最后执行finally{...}代码
+
+		最后请注意catch和finally可以不必都出现
+
+   错误类型
+		
+   javascript有一个标准的Error对象表示错误，还有从Error派生出来的TypeError、ReferenceError等错误对象。我们在处理错误时，可以通过catch(e)捕获的变量e访问错误对象。
+
+		try {
+			...
+		} catch(e) {
+			if(e instanceof TypeError) {
+				alert{'Type error!'};
+			} else if(e instanceof Error) {
+				alert(e.message);
+			} else {
+				alert('Error' + e);
+			}
+		}
+
+		使用变量e是一个喜欢用法，也可以以其他变量名命名，如catch(ex)
+
+   抛出错误
+
+   程序主动抛出错误：让执行程序直接跳转到catch块。抛出错误使用throw语句
+
+		'use strict';
+		var r,n,s;
+		try {
+			s = prompt('请输入一个数字');
+			n = parseInt(s);
+			if (isNaN(n)) {
+				throw new Error('输入错误');
+			}
+			r = n * n;
+			alert(n + '*' + n +'=' +r);
+		} catch(e) {
+			alert('出错了： '+ e);
+		}
+
+   实际上javascript允许抛出任意对象，包括数字、字符串。但是，最好还是抛出一个Error对象
+
+   最后当我们用catch捕获错误的时候，一定要编写错误处理语句：
+
+		var n = 0,s;
+		try {
+			n = s.length;
+		} catch(e) {
+			console.log(e);
+		}
+
+		console.log(n);
+
+		因为如果catch到错误却什么都不执行，就不知道程序执行过程中到底有没有发生错误。
+
+#####错误传播：
+
+   如果代码发生错误，又没有被try..catch捕获，那么程序流程会跳转到？
+
+		function setLength(s) {
+			return s.length;
+		}
+
+		function printLength() {
+			console.log(getlength('abc'));
+			console.log(getLength(null));
+		}
+
+		printLength();
+
+   如果在一个函数的内部发生了错误，它自身没有捕获，错误就会被抛到外层调用函数，如果外层调用函数也没有捕获，该错误就会一直沿着函数调用链向上抛出，直到被javascript引擎捕获，代码终止执行
+
+   所以我们不必在每一个函数内部捕获错误，只需要在一个合适的地方来个统一的捕获，一网打尽
+
+		'use strict';
+		function main(s) {
+			console.log('BEGIN main()');
+			try {
+				foo(s);
+			} catch (e) {
+				alert('出错了： '+e);
+			}
+			console.log('END main()')
+		}
+
+		function foo(s) {
+			console.log('BEGIN foo()');
+			bar(s);
+			console.log('END foo()');
+		}
+
+		function bar(s) {
+			console.log('BEGIN bar()');
+			console.log('length = '+s.length);
+			console.log('END bar()');
+		}
+
+		main(null);//因为null 没有length所以会报错，一步一步的向上传。最终在main()函数中被处理
+
+#####异步错误处理
+
+   编写javascript代码时，我们要时刻牢记，javascript引擎是一个事件驱动的执行引擎，代码总是以单线程执行，而回调函数的执行需要等到下一个满足条件的事件出现后，才会被执行
+
+		setTimeout()函数可以传入回调函数，并在指定的若干毫秒后执行：
+
+		function printTime() {
+			console.log('it is time');
+		}
+
+		setTimeout(printTime,1000);
+		console.log('done');
+
+		上面的代码会先打印done  1秒后才会打印 it is time!
+
+		如果printTime()函数内部发生了错误，我们试图用try包裹setTimeout()是无效的
+
+		所以，涉及到异步代码，无法在调用时捕获，在绑定事件的代码处，无法捕获事件处理函数的错误
+
+		'use strict';
+		var $btn = $('#calc');
+		$btn.off('click');
+		$btn.click(function() {
+			var 
+				x = parseFloat($('#x').val),
+				y = parseFloat($('#y').val)
+				r;
+			try {
+				if(isNaN(x)||isNaN(y)) {
+					throw new Error('输入有误'); 
+				}
+				r = x + y;
+				alert('计算结果： ' + r);
+			}catch(e) {
+				alert('输入有误');
+			}
+		})；
+
+###underscore
+
+   javascript是函数式编程语言，支持高阶函数和闭包，函数式编程非常强大，可以写出非常简洁的代码。例如：Array的map()  和  filter()方法：
+
+		'use strict';
+		var a1 = [1,4,9,16];
+		var a2 = a1.map(Math.sqrt);//[1,2,3,4]
+		var a3 = a2.filter((x)=>{return x%2 ===0;});//[2,4]
+
+   这些方法只有Array有，而Object没有这些方法。
+   一：自己把这些方法添加到Array.prototype中，然后给Object.prototype也加上mapObject()等类似的方法
+
+   二：直接找一个成熟可靠地第三方开源库，使用统一函数来实现map()、filter()这些操作   选择第三方库underscore
+
+   同jQuery统一了不同函数之间的DOM操作的差异，让我们可以简单地对DOM进行操作。underscore则提供了一套完善的函数式编程接口，让我们更方便的在javascript中实现函数式编程
+
+   underscore会把自身绑定到唯一的全局变量 _ 上
+
+   实现map()操作：
+			
+		'use strict';
+		_.map([1, 2, 3], (x) => x * x);//[1, 4, 9]
+
+   直接看较为麻烦，但是其还可以作用于Object:
+
+		'use strict';
+		_.map({ a: 1, b: 2, c: 3 },(v,k)=>k+'='+v);
+
+
+#####Collections
+
+   underscore为集合类对象提供了一致的接口。集合类是指Array和Objec,暂不支持Map和Set
+
+		map和filter
+		和Array的map()与filter()类似，但是underscore的map()和filter()可以作用于Object。当做用于Object时，传入的函数为function(value, key)
+
+		'use strict';
+		var obj = {
+			name: 'bob',
+			school: 'No.1 middle school',
+			address: 'xueyuan road'
+		};
+
+		var upper = _.map(obj, function(value, key) {
+			return value.toUpperCase();
+		});
+
+		alert(JSON.stringify(upper));
+
+		这样操作返回的数组，把_.map换成_.mapObject时就会返回Object
+
+   every/some
+   当集合的所有元素都满足条件的，_.every()函数返回true
+   当集合中至少有一个元素满足条件时，_.some()函数返回true:
+
+		'use strict';
+		_.every([1,4,7,-3,-9],(x)=>x>0);//false
+		_.some([1,4,7,-3,-9],(x)=>x>0);//true
+
+		'use strict';
+		var obj = {
+			name: 'bob',
+			school: 'No.1 middle school',
+			address: 'xueyuan road'
+		};
+
+		var r1 = _.every(obj, function(value, key) {
+			return key===key.toLowerCase()&&value===value.toLowerCase();
+		});
+
+		var r2 = _.some(obj, function(value,key) {
+			return key===key.toLowerCase()&&value===value.toLowerCase();
+		});
+
+		alert('every key-value are lowercase: '+ r1 +'\nsome key-value arer lowercase' + r2);
+
+   max/min这两个函数直接返回集合中最大的数和最小的数
+
+		'use strict';
+		var arr = [3,5,7,9];
+		_.max(arr);
+		_.min(arr);
+
+		空集合会返回-Infinity 和 Infinity,所以要先判断集合不为空
+		_.max([])
+		-Infinity
+		_.min([])
+		Infinity
+
+		注意集合是Object，max()和min()只作用于value,忽略掉key
+
+		'use strict';
+		_.max({a:1,b:2,c:3});
+
+   groupBy()把集合的元素按照key归类，key由传入的函数返回
+
+		'use strict';
+
+		var scores = [20,81,75,40,91,59,77,66,72,88,99];
+		var groups = _.group(scores, function(x) {
+			if(x<60) {
+				return 'C';
+			} else if(x<80) {
+				return'B';
+			}else {
+				return 'A';
+			}
+		});
+
+   可见groupBy()用来分组是非常方便的
+
+		
+   shuffle/sample
+   shuffle()用洗牌算法随机打乱一个集合
+
+		'use strict';
+		_.shuffle([1,2,3,4,5,6]);//每次结果都不一样
+
+   sample()则是随机选择一个或多个元素
+
+		'use strict';
+		_.sample([1,2,3,4,5,6]);
+		_.sample([1,2,3,4,5,6],3);
+
+#####Arrays
+
+   first/last(这两个函数分别取第一个和最后一个元素)
+
+		'use strict';
+		var arr = [2,4,6,8];
+		_.first(arr);//2
+		_.last(arr);//8
+
+   flatten(flatten()接收一个Array,无论这个Array里面潜逃了多少个Array,flatten()最后都把他们变成了一个一维数组)
+
+		'use strict';
+		_.flatten([1,[2],[3,[[4],[5]]]]);//[1,2,3,4,5]
+
+   zip/unzip(zip()把两个或多个数组的所有元素按索引对齐，然后那索引合并成新数组。例如，你现在有一个Array保存了名字，另一个Array保存了分数，现在要把名字和分数给对上，用zip()轻松实现)
+
+		'use strict';
+		var names = ['Adam','Lisa','Bart'];
+		var scores = [85,92,59];
+		_.zip(names,scores);// [['Adam',85],['Lisa',92],['Bart',59]]
+
+		'use strict';
+		var namesAndScores = [['Adam',85],['Lisa',92],['Bart',59]];
+		_.unzip(namesAndScores);
+
+   object  有时候想与其用zip()  为啥不把名字和分数直接对应成Object
+
+		'use strict';
+		var name = ['Adam','Lisa','Bart'];
+		var scores = [85,92,59];
+		_.object(names,scores);//[['Adam',85],['Lisa',92],['Bart',59]]
+
+		_.object()是一个函数，不是javascript的Object对象
+
+   range()  快速生成一个序列，不再需要用for 循环来实现
+
+		'use strict';
+		_.range(10);//[0,1,2,3,4,5,6,7,8,9]
+		_.range(1,11);//[1,2,3,4,5,6,7,8,9,10]
+		_.range(0,30,5);//[0,5,10,15,20,25]
+		_.range(0,-10,-1);//[0,-1,-2,-3,-4,-5,-6,-7,-8,-9]
+
+#####Functions
+
+   提供了大量javasript的本身没有的高阶函数
+
+   bind(绑定到对应的对象，使得函数的this有正常的指向)
+
+		'use strict';
+		var log = _.bind(console.log,console);
+		log('hello,world!');
+
+   partial(就是为一个函数创建偏函数)
+
+   假设我们要计算x的y次方，这时只要调用Math.pow(x,y)就可以了
+   假设我们经常计算2的y次方，则这样写就比较麻烦，如果创建一个新的函数能直接写pow2N(y)，此即为偏函数，它固定住了原函数的第一个参数（始终为2）
+
+		'use strict';
+		var pow2N = _.partial(Math.pow,2);
+		pow2N(3);
+		pow2N(5);
+		pow2N(10);
+
+		如果我们不想固定第一个参数，想固定第二个参数。创建一个偏函数cube(x)计算x的3次方，可以用_作占位符，固定住第二个参数：
+
+		'use strict';
+
+		var cube = _.partial(Math.pow,_,3);
+		cube(3);
+		cube(5);
+		cube(10);
+		可见创建偏函数的目的是将原函数的某些参数固定住，可以降低新函数的调用 的难度
+
+   memoize(如果一个函数调用的开销很大，我们希望把结果保存下来，以便后续调用时直接获得结果)
+
+		'use strict';
+
+		function factorial(n) {
+			console.log('start calculate'+n+'!...');
+			var s = 1, i = n;
+			while(i>1) {
+				s = s * i;
+				i--;
+			}
+			console.log(n+'!='+s);
+			return s;
+		}
+
+		factorial(10);
+
+		memoize()就可以自动缓存函数计算的结果：
+		'use strict';
+
+		var factorial = _.memoize(function(n) {
+			console.log('start calculate'+n+'!...');
+			var s = 1, i = n;
+			while(i>1) {
+				s = s * i;
+				i--;
+			}
+			console.log(n+'!='+s);
+			return s;
+		});
+
+		factorial(10);//第一次控制台有输出
+		factorial(10);//控制台没有输出但仍然返回结果
+		
+		还可以实现递归的调用
+
+		'use strict';
+
+		var factorial = _.memoize(function(n) {
+			console.log('start calculate'+n+'!...');
+			while(n<2) {
+				return 1;
+			}
+			return n * factorial(n - 1);
+		});
+
+		factorial(10);//第一次控制台有输出,递归调用把1到10都进行了缓存
+		factorial(9);//控制台没有输出但仍然返回结果
+
+   once(保证某个函数执行且只执行一次。无论用户点击多少次)
+
+		'use strict';
+		var register = _.once(function () {
+			alert('Register ok!');
+		});
+		register();
+		register();
+
+   delay()可以让一个函数延迟执行，效果和setTimeout()是一样的，但还是代码明显简单
+
+		'use strict';
+		_.delay(alert,2000);
+
+		如果要延迟调用的函数有参数，把参数也传进去
+
+		'use strict';
+
+		var log = _.bind(console.log,console);
+		_.delay(log, 2000, 'Hello', 'world!');
+
+#####Objects(和Array类似，大量的针对Object的函数)
+
+   keys//allKeys
+   keys()可以非常方便的返回一个object自身所有的key,但不包含从原型链继承下来的
+
+		'use strict';
+		function Student(name, age) {
+			this.name = name;
+			this.age = age;
+		}
+
+		var xiaoming = new Student('小明'，20);
+
+		_.keys(xiaoming);//['name','age']
+
+   allKeys()除了自身object自身的key,还包含从原型链上继承下来的
+
+		'use strict';
+		function Student(name, age) {
+			this.name = name;
+			this.age = age;
+		}
+
+		Student.prototype.school = 'No.1 Middle School';
+		var xiaoming = new Student('小明'，20);
+
+		_.allKeys(xiaoming);//['name','age','school']
+
+   values(和keys相似，values()返回object自身但不包含原型链继承的所有值)
+
+		'use strict';
+		var obj = {
+			name: '小明',
+			age: 20
+		};
+		_.value(obj);//['小明'，20]
+
+   mapObject(针对object的map 版本)
+
+		'use strict';
+		var obj = {a:1, b: 2, c:3};
+		//注意传入的函数签名，value在前，key在后
+		_.mapObject(obj,(v,k)=>100+v);//[a:101,b:102,c:103]
+
+   invert 把object的每个key-value来个交换，key变成value,value变成key;
+
+		'use strict';
+		var obj = {
+			Adam: 90,
+			Lisa: 85,
+			Bart: 59
+		};
+
+		_.invert(obj);
+
+   extend/extendOwn
+   extend()把多个object的key-value合并到第一个object并返回
+
+		'use strict';
+		var a = {name: 'Bob', age:20};
+		_.extend(a,{age: 15}, {age: 88, city:'bejing'});
+		a;//{name:'Bob',age:88,city:'beijing'}
+
+		注意，如果有相同的key,后面的object的value将覆盖前面的object的value。extendOwn()和extend()类似，但获取属性时忽略从原型链继承下来的属性
+
+   clone如果要赋值一个object对象，就可以用clone()方法，它会把原有的对象的所有属性都复制到新的对象中：
+
+		'use strict';
+		var obj = {
+			Adam: 90,
+			Lisa: 85,
+			Bart: 59
+		};
+		var copied = _.clone(obj);
+
+		clone是浅复制，所谓的浅复制，两个相同的key所引用的value其实是同一对象。也就是说修改其中一个obj.Bart会影响到copied.Bart
+
+   isEqual(isEqual()对两个object进行深度比较，如果内容相同，则返回true)
+
+		'use strict';
+		var o1 = { name: 'Bob',skills: {java: 90, javascript: 99}};
+		var o2 = { name: 'Bob',skills: {javascript: 99, java: 90}};
+
+		o1 === 02;//false
+		_.isEqual(o1,o2);//true
+
+		isEqual()其实对Array也可以比较
+
+		'use strict';
+		var o1 = ['Bob', {skills: ['java','javascript']}];
+		var o2 = ['Bob',{skills: ['java','javascript']}];
+
+		o1 === o2;//false
+		_.isEqual(o1, o2);//true
+
+   Chaining
+
+   jQuery的链式调用
+	
+		我们有一组操作，用underscore提供的函数，写出来像这样
+
+		_.filter(_.map([1,4,9,16,25],Math.sqrt), x=>x%2 === 1);//能不能写成链式调用呢
+
+		chain()函数
+		_.chain([1,4,9,16,25])
+		 .map(Math.sqrt)
+		 .filter(x => x % 2 === 1)
+		 .value();//[1,3,5]
+		因为每一步返回的都是包装对象，所以最后一步的结果需要调用value()获得最终结果
+
+###Node.js(javascript的后端开发之旅)
+
+   Node上运行的javascript天生的事件驱动机制加V8高性能引擎，使编写高性能WEB服务轻而易举。
+   
+   其次javascript语言本身就会完善的函数式语言，在前端开发时，开发人员往往写的比较随意。让人觉得javascript就是个玩具语言。但是在Node环境下，通过模块化的javascript代码，加上函数式编程，并且无需考虑浏览器兼容性问题，直接使用ES6标准，可以完全满足工程上的需要。
+
+   npm:（Node.js的包管理工具）（package manager） 大家把自己开发的模块打包放到npm 的官网上，如果要使用，直接通过npm安装就可以直接调用，不用管代码存在哪，应该从哪下载、
+
+   npm还可以把所有的依赖包下载下来并管理起来。
+
+
+#####第一个Node程序
+
+	C：\Workspace>node hello.js
+	Hello,world.//当前目录下没有hello.js，运行时就会报错
+
+	区分命令模式和Node交互模式
+	c:\>是在Windows提供的命令行模式
+	>是在Node交互模式：
+
+	使用严格模式
+	'use strict';
+
+#####模块
+
+   在node环境下，一个.js文件就称之为一个模块（module）
+
+   编写模块时，不用考虑名字与其他模块冲突hello.js就是hello模块
+
+		'use strict';
+		var s = 'Hello';
+		function greet(name) {
+			console.log(s+', '+name+'!');
+		}
+		module.exports = greet;//意思是函数greet作为模块输出暴露出去，这样其他模块就可以使用greet函数了
+
+   调用hello模块的greet函数
+
+		'use strict';
+		var greet = require('./hello');
+		var s = 'michael';
+		greet(s);//Hello, Michael!
+		注意到hello模块用node提供的require函数
+
+		引入的模块作为变量保存在greet变量中，该变量就是hello模块中定义的greet()函数，接下来就可以直接使用它了
+
+		还要注意引用模块时的相对路径。如果只写文件名，则Node会依次在内置模块、全局模块和当前模块下查找hello.js
+
+		出现错误时，检查：
+		模块名是否写对了
+		模块文件是否存在
+		相对路径是否写对了
+
+   CommonJS规范
+
+		这种模块加载机制被称为CommonJS规范。在这个规范下，每个.js文件都是一个模块，它们内部各自使用的变量名和函数名都互不冲突
+
+		一个模块想要对外暴露自己的变量，函数也是变量，就可以用 module.exports = variable;一个模块要引用其他模块暴露的变量，用var ref = require('module_name');就拿到了引用模块的变量
+
+		在浏览器中，大量使用全局变量，不同文件的同变量名的全局变量会相互影响。我们用JavaScript代码用一个函数包装起来，这段代码的所有的全局变量就变成了函数内部的局部变量。
+
+		var s = 'hello';
+		var name = 'world';
+
+		console.log(s + '' + name +'!');
+
+		用node.js加载之后，可以把代码包装一下，变成这样执行：
+
+		(function() {
+			var s = 'hello';
+			var name = 'world';
+
+			console.log(s + '' + name +'!');
+		})();
+
+		但是，模块的输出module.exports怎么实现？
+		这个也很容易实现，Node可以先准备一个对象module
+		
+		var module = {
+			id: 'hello',
+			exports: {}
+		};
+
+		var load = function(module) {
+			function greet(name) {
+				console.log('Hello, '+name+'!');
+			}
+			module.exports = greet;
+			return module.exports;
+		};
+
+		var exported = load(module);
+
+		save(module, exported);
+
+		通过参数把module传递给load()函数，hello.js就顺利地把一个变量传递给了Node执行环境，Node就会把module变量保存到某个地方。
+
+		由于Node保存了所有导入的module，当我们用require()获取module时，Node找到对应的module变量保存到某个地方。由于Node保存了所有导入的module
+
+   module.exports vs exports
+
+		很多时候，你会看到，在Node环境中，有两种方法可以在一个模块 中输出变量：
+
+   一：对module.exports赋值：
+
+		function hello() {
+			console.log('Hello, world');
+		}
+
+		function greet(name) {
+			console.log('hello,'+name+'!');
+		}
+
+		module.exports = {
+			hello: hello,
+			greet: greet
+		};
+
+   二：直接使用exports:
+
+		exports.hello = hello;
+		exports.greet = greet;
+
+		但是不能直接对exports赋值
+
+   但是如果我们要输出一个函数或数组，那么只能给module.exports赋值
+
+   如果要输出一个键值对象{}，可以利用exports这个已经存在的空对象{}，并继续在上面添加新的键值：如果要输出一个函数或数组，必须直接对module.exports对象赋值
+
+   所以我们可以得出结论：直接对module.exports赋值，可以应对任何情况
+
+#####基本模块
+
+   global(唯一的全局对象，在Node.js的交互环境中，可以直接输入)
+
+		global.console
+
+   process(也是Node.js提供的一个对象，它代表当前Node.js进程)
+
+		process === global.process;
+		process.version;
+		process.platform;
+		process.arch;
+		process.cwd();
+		process.chdir();
+
+   Javascript程序是由事件驱动执行的单线程模型，node.js也不例外。Node.js不断执行响应事件的函数可以执行时，Node.js就退出了
+
+   如果我们想要在下一次事件响应中执行代码，可以调用process.nextTick():
+
+		process.nextTick(function () {
+			console.log('nextTick callback');
+		});
+
+		console.log('nextTick was set');
+
+		输出顺序是：
+		nextTick was set!
+		nextTick callback!
+
+		说明process.nextTick()函数不是立刻执行的，而是要等到下一次事件循环
+
+   Node.js进程本身的事件就由process对象来处理。如果我们响应exit事件，就可以在程序即将退出时执行某个回调函数：
+
+		process.on('exit',function(code) {
+			console.log('about to exit with code:'+code);
+		});
+
+   有很多javascript代码既可以在浏览器执行，又可以在Node环境执行，判断其在何种环境执行时根据浏览器和Node环境提供的全局变量的名称进行判断：
+
+		if (typeof(window)==='undefined') {
+			console.log('node.js');
+		} else {
+			console.log('browser');
+		}
+
+#####fs
+
+   Node.js内置的fs模块就是文件系统模块，负责读写文件。和其他模块不同的是，它提供了同步和异步的方法。
+
+   因为Javascript的单线程模型，执行IO操作时，javascript代码无需等待，而是传入回调函数后，继续执行后续javascript代码，比如Jquery提供的getJSON()操作：
+
+		$.getJSON('http://example.com/ajax',function (data) {
+			console.log('IO结果返回后执行...');
+		});
+		console.log('不等待IO结果直接执行后续代码...');
+
+   而同步的IO操作则需要等待函数返回
+
+		var data = getJSONSync('http://example.com/ajax');
+		同步操作的好处是代码简单，缺点是程序将等待IO操作，在等待的时间内，无法响应其他任何事件。而异步读取不用等待IO操作，但代码较麻烦。
+
+
+   异步读取文件：按照Javascript的标准，异步读取一个文本文件的代码如下：
+
+		'use strict';
+		var fs = require('fs');
+		fs.readFile('sample.txt','utf-8',function(err, data){
+			if(err) {
+				console.log(err);
+			} else {
+				console.log(data);
+			}
+		});
+
+		请注意，sample.txt文件必须在当前目录下，且文件编码为utf-8
+
+   异步读取时，传入的回调函数接收两个参数，当正常读取时，err参数为null  ，data参数为读取到的String。当读取对象发生错误的时候，err参数代表一个错误对象，data为undefined。这也是Node.js标准的回调函数，第一个参数代表错误信息，第二个参数代表结果。
+
+   由于err是否为null就是判断是否出错的标志，所以通常的判断逻辑总是：
+
+		if(err) {
+			//出错了
+		} else {
+			//正常
+		};
+
+   但是如果我们要读取的文件不是文本文件，而是二进制文件
+
+		'use strict';
+		var fs = require('fs');
+
+		fs.readFile('sample.png',function (err,data) {
+			if(err) {
+				console.log(err);
+			} else {
+				console.log(data);
+				console.log(data.length + 'bytes');
+			}
+		});
+
+   当读取二进制文件时，不传入文件编码时，回调函数的data参数将返回一个Buffer对象.在Node.js中，Buffer对象就是一个包含零个或任意个字节的数组（和Array不同）
+
+   Buffer对象可以和String作转换，例如，把一个Buffer对象转换成String:
+
+		var text = data.toString('utf-8');
+		console.log(text);
+
+   或者再把一个String转换成Buffer:
+
+		var buf = new Buffer(text,'utf-8');
+		consloe.log(buf);
+
+   同步读取文件：除了标准的异步读取模式外,fs也提供了相应的同步读V圈函数。同步读取的函数和异步读取的函数相比，多了一个Sync后缀，并且不接受回调函数，函数直接返回结果
+
+		'use strict';
+		var fs = require('fs');
+		var data = fs.readFileSync('sample.txt','utf-8');
+		consloe.log(data);
+
+   		可见，原异步调用的回调函数的data被函数直接返回，函数名直接返回，函数名需要修改为readFileSync,
+
+		如果同步读取文件发生错误，则需要用try...catch捕获该错误：
+
+		try {
+			var data = fs.readFileSync('sample.text','utf-8');
+			console.log(data);
+		} catch (err) {
+			//
+		}
+
+   写文件：将数据写入文件是通过fs.writeFile()实现的
+
+		'use strict';
+		var fs = require('fs');
+		var data = 'Hello, Node.js';
+		fs.writeFile('output.txt',data,function(err) {
+			if(err) {
+				consloe.log(err);
+			} else {
+				console.log('ok.');
+			}
+		});
+
+		writeFile()的参数依次为文件名、数据和回调函数。如果传入的数据是String,默认按UTF-8编码，写入文件，如果传入的参数是Buffer,则写入的是二进制文件。回调函数由于只关心成功与否，因此只需要一个err参数
+
+   和readFile()类似，writeFile()也有一个同步方法，叫writeFileSync():
+
+		'use strict';
+		var fs = require('fs');
+		var data = 'Hello, Node.js';
+		fs.writeFileSync('output.txt', data);
+
+   stat 如果我们获取文件的大小，创建时间等信息，可以使用fs,stat(),它返回一个Stat对象，能告诉我们文件或目录的相信信息。
+
+		'use strict';
+		var fs = require('fs');
+		fs.stat('sample.txt',function(err, stat) {
+			if(err) {
+				console.log(err);
+			} else{
+				console.log('isFile: ' +stat.isFile());//是否为文件
+				console.log('isDirectory: ' +stat.isDirectory());//是否是目录
+			}
+			if(stat.isFile()) {
+				console.log('size: '+stat.size);
+				console.log('birth time' +stat.birthtime);
+				console.log('modified time' +stat.mtime);
+			}
+		});
+
+		stat()也有一个对应的同步函数statSync()
+
+   异步还是同步，在fs模块中，提供同步方法是为了方便使用
+
+   由于Node环境执行JavaScript代码是服务器端代码，所以，绝大部分需要在服务器运行期反复执行业务逻辑代码，必须使用异步代码，否则在执行期间，服务器将停止，因为JavaScript只有一个执行线程。
+
+   服务器启动时如果需要读取配置文件，或者结束时需要写入到状态文件时，可以使用同步代码，因为这些代码只有在启动和结束时执行一次，不影响服务器正常运行时的异步执行。
+
+#####stream
+
+   stream是Node.js提供的又一个仅在服务端可用的模块，目的是支持“流”这种数据结构。
+
+   标准输入流（stdin）标准输出流（stdout）流的特点是数据是有序的，而且必须依次读取，或者依次写入，不能像array那样随机定位。
+
+   在node.js中，流也是一个对象，我们只需要响应流的事件就可以了：data事件表示流的数据已经可以读取了，end事件表示这个流已经到末尾了，没有数据可以读取了，error事件表示出错了。
+
+   下面是一个从文件流读取文本内容的示例：
+
+		'use strict';
+		var fs = require('fs');
+		var rs = fs.createReadStream('sample.txt','utf-8');
+		rs.on('data',function(chunk) {
+			console.log('DATA:');
+			console.log(chunk);
+		});
+		rs.on('end',function() {
+			console.log('END');
+		});
+		rs.on('error',function(err) {
+			console.log('ERROR: '+err);
+		});
+
+   		要注意，data事件可能会有多次，每次传递的chunk是流的一部分。
+		要以流的形式写入文件，只需要不断地调用write()方法，最后以end结束：
+
+		'use strict';
+		var fs = require('fs');
+		var ws1 = fs.createWriteStream('output1.txt',utf-8);
+		ws1.write('使用Stream写入文本数据');
+		ws1.write('END.');
+		ws1.end();
+
+		var ws2 = fs.createWriteStream('output2.txt');
+		ws2.write(new Buffer('使用Stream写入二进制数据...\n','utf-8'));
+
+		所有可以读取数据的流都继承自stream.Readable,所有可以写入的流都继承自stream.Writable
+
+   pipe
+
+   就像可以把两个水管串成一个更长的水管一样，两个流也可以串起来。一个Readable流和一个Writable流串起来之后，所有的数据自动从Readable流进入writable流,这种操作叫做pipe
+
+   在node.js中，Readable流有一个pipe()方法，就是用来做这样的事情的。
+
+   让我们用pipe()把一个文件流和另一个文件流串起来，这样源文件的所有数据就自动写入到目标文件中去了，所以，这实际上就是一个复制文件的程序：
+
+		'use strict';
+		var fs = require('fs');
+		var rs = fs.createReadStream('sample.txt');
+		var ws = fs.createWriteStream('copied.txt');
+
+		rs.pipe(ws);
+
+		默认情况下，当Readable流的数据读取完毕，end事件触发后，将自动关闭Writable流，如果我们不希望关闭该流则，需要传递参数：
+
+		readable.pipe(writable,{ end: false});
+
+#####http
+
+   Node.js开发的目的就是用javascript编写Web服务器程序。
+
+   HTTP协议 要开发HTTP服务器程序，从头处理TCP链接，解析HTTP是不现实的。这些工作实际上由Node.js自带的http模块完成了，应用程序并不直接与HTTP协议打交道，而是操作http模块提供的request和reponse对象
+
+   request对象封装了HTTP请求，我们调用request对象的属性和方法就可以拿到所有HTTP请求的信息：
+
+   response对象封装了HTTP响应，我们操作response对象的方法，就可以吧Http响应返回给浏览器。
+
+   用Node.js实现一个HTTP服务器程序非常简单。我们来实现一个最简单的 hello.js。其对于所有的请求都返回Hello world!
+
+		'use strict';
+		var http = require('http');
+		var server = http.createServer(function(request, response) {
+			console.log(request.method+':'+request.url);
+			respon.writeHead(200, {'Content-Type':'text/html'});
+			response.end('<h1>hello world</h1>');
+		});
+
+		server.listen(8080);
+		console.log(Server is running at http://127.0.0.1:8080/);
+
+   文件服务器
+
+   让我们继续扩展web程序。我们可以设定一个目录，然后让web程序变为一个文件服务器。我们只需要解析request.url中的路径，然后在本地找到对应的文件，把文件内容发出去就可以了。
+
+   解析URL需要用到Node.js提供的url模块，它使用起来非常简单，通过parse()将一个字符串解析为一个Url对象：
+
+		'use strict';
+		var url = require('url');
+		console.log(url.parse('http://user:pass@host.com:8080/path/to/file?query=string#hash'));
+
+		结果如下：
+		Url {
+			protocol: 'http:',
+			slashes: true,
+			auth: 'user:pass',
+			host: 'host.com:8080',
+			port: '8080',
+			hostname: '#hash',
+			search: '?query=string',
+			query: 'query=string',
+			pathname: '/path/to/file',
+			path: '/path/to/file?query=string',
+			href: 'http://user:pass@host.com:8080/path/to/file?query=string#hash'
+		}
+
+		处理本地文件目录需要使用到Node.js提供的path模块，他可以方便的构造目录：
+
+		'use strict';
+		var path = require('path');
+		var workDir = path.resolve('.');
+		var filePath = path.join(workDir,'pub','index.html');
+
+		使用path模块可以正确处理操作系统相关的文件路径。
+
+   最后实现一个文件服务器：
+
+		'use strict';
+		var 
+			fs = require('fs'),
+			url = require('url'),
+			path = require('path'),
+			http = require('http');
+
+		var root = path.resolve(process.argv[2] ||'.');
+		console.log('Static root dir: '+root);
+
+		var server = http.createServer(function(request, response) {
+			var pathname = url.parse(request.url).path.name;
+			var filepath = path.join(root, pathname);
+			fs.stat(filepath, function(err, stats) {
+				if(!err && stats.isFile()) {
+					console.log('200'+ request.url);
+					response.writeHead(200);
+					fs.createReadStream(filepath).pipe(response);
+				} else {
+					console.log('404' + request.url);
+					response.writeHead(404);
+					response.end('404 Not Found');
+				}
+			});
+		});
+
+		server.listen(8080);
+		console.log('server is running at http://127.0.0.1:8080/');
+
+		没有必要手动读取文件内容。由于response对象本身是一个Writable Stream,直接用pipe()方法就实现了自动读取文件内容并输出到HTTP响应
+
+   crypto
+
+   crypto模块的目的是为了提供通用的加密和哈希算法。用纯javascript代码实现这些功能不是不可能，只是速度会很慢。
+
+   MD5和SHA1  MD5是一种常用的哈希算法，用于给任意数据一个签名。这个签名通常用一个十六进制的字符串表示：
+
+		const crypto = require('crypto');
+		const hash = crypto.createHash('md5');
+		hash.update('Hello, world');
+		hash.update('hello, nodejs!');
+
+		console.log(hash.digest('hex'));// 7e1977739c748beac0c0fd14fd26a544
+
+		update()方法默认字符串编码为utf-8，也可传入Buffer
+
+		结果要计算SHA1，只需要把'md5'改成'sha1',就可以得到SHA1的1f32b9c9932c02227819a4151feed43e131aca40
+
+		还可以使用更安全的sha256和sha512
+
+   Hmac
+   其也是一种哈希算法，它可以利用MD5或SHA1等哈希算法。不同的是，Hmac还需要一个密钥：
+
+		const crypto = require('crypto');
+		const hmac = crypto.createHmac('sha256','secret-key');
+
+		hmac.update('hello world');
+		hmac.update('hellonodejs');
+
+		console.log(hamc.digest('hex'));// 80f7e22570...
+
+		只要密钥发生了变化，那么同样的输入数据也会得到不同的签名，因此可以吧Hmac理解为用随机数增强的哈希算法。
+
+   AES
+   为一种常用的对称的加密算法，加解密都使用同一个密钥。crypto模块提供了AES支持。但是需要自己封装好函数，便于使用：
+
+		const crypto = require('crypto');
+		function aesEncrypt(data, key) {
+			const cipher = crypto.createCipher('aes192',key);
+			var crypted = cipher.update(data,'utf8','hex');
+			crypted += cipher.final('hex');
+			return crypted;
+		}
+
+		function aesDecrypt(encrypted, key) {
+			const decipher = crypto.createDecipher('aes192', key);
+			var decryted = decipher.update(encrypted,'hex','utf8');
+			decrypted += decipher.final('utf8');
+			return decrypted;
+		}
+
+		var data = 'Hello, this is a secret message';
+		var key = 'Password!';
+		var encrypted = aesEncrypt(data, key);
+		var decrypted = aesDecrypt(encrypted, key);
+
+   		console.log('Plain text: '+ data);
+		console.log('Encrypted text:'  + encrypted);
+		console.log('Decrypted text: ' + decrypted);
+
+		运行结果如下：
+		
+		Plain text: Hello, this is a secret message!
+		Encrypted text: 8a944d97bdabc157a5b7a40cb180e7...
+		Decrypted text: Hello, this is a secret message!
+
+		可见，加密后的字符串通过解密又得到了原始内容。
+
+		注意到AES有很多不同的算法，如aes192  aes-128-ecb  aes-256-cbc等，AES除了密钥外还可以指定IV（Initial Vector）,不同的系统只要IV不同，用相同的密钥加密相同的数据结果也是不同的。加密的结果通常有两种表示方法：hex和base64,这些功能Nodejs全部支持，但是在应用中如果使用的不是同一种语言，需要仔细的测试，无法确认双方是否使用的是遵循相同的AES算法，字符串密钥和IV是否相同，加密后的数据是否为统一的hex或base64格式
+
+   Diffie-Hellman
+   DH算法是一种密钥交换协议，它可以让双发在不泄密的情况下协商出一个密钥来：
+
+		1：小明先选一个素数和一个底数，例如，素数p=23，底数g=5（底数可以任选），再选择一个秘密整数a=6，计算A=g^a mod p=8，然后大声告诉小红：p=23，g=5，A=8；
+
+		2：小红收到小明发来的p，g，A后，也选一个秘密整数b=15，然后计算B=g^b mod p=19，并大声告诉小明：B=19；
+
+		3：小明自己计算出s=B^a mod p=2，小红也自己计算出s=A^b mod p=2，因此，最终协商的密钥s为2。
+	
+		4：在这个过程中，密钥2并不是小明告诉小红的，也不是小红告诉小明的，而是双方协商计算出来的。第三方只能知道p=23，g=5，A=8，B=19，由于不知道双方选的秘密整数a=6和b=15，因此无法计算出密钥2。
+
+	使用crypto模块实现DH算法
+
+		const crypto = require('crypto');
+
+		var ming = crypto.createDiffieHellman(512);
+		var ming_keys = ming.generateKeys();
+		var prime = ming.getPrime();
+		var generator = ming.getGenerator();
+
+		console.log('Prime: ' +Prime.toString('hex'));
+		console.log('Generator:' +generator.toString('hex'));
+
+		var hong = crypto.createDiffieHellman(prime, generator);
+		var hong_keys = hong.generatorKeys();
+
+		var ming_secret = ming.computeSecret(hong_keys);
+		var ming_secret = hong.computeSecret(ming_keys);
+
+		console.log('Secret of xiaoming: '+ming_secret.toString('hex'));
+		console.log('Secret of xiaohong: '+hong_secret.toString('hex'));
+
+		运行后可得结果：
+		$ node dh.js 
+		Prime: a8224c...deead3
+		Generator: 02
+		Secret of Xiao Ming: 695308...d519be
+		Secret of Xiao Hong: 695308...d519be
+
+		保证每次的输出都不一样，因为素数的选择是随机的
+
+   证书
+
+		crypto模块也可以处理数字证书。数字证书通常用在SSL链接，也就是在WEB的https链接。一般情况下，https链接只需要处理服务器端的单向认证，如无特殊要求，建议用反向代理服务器如Nginx等WEB服务器去处理证书。
+
+#####web开发
+
+		常见的Web框架： Express,Sails.js,koa,Meteor
+		ORM框架比web框架少一些： Sequelize, ORM2, Bookshelf.js
+		模板引擎框架PK：Jade  Ejs  Swig  Nunjuncks  dot.js
+		测试框架： Mocha  Expresso  unit.js
+		构建工具： Grunt  GUlp
+
+#####koa
+
+		koa是Express的下一代基于Node.js的web框架
+		
+   Espress  是第一代最流行的web框架，它对于Node.js的http进行了封装
+
+		var express = require('express');
+		var app = express();
+
+		app.get('/', function(reg, res) {
+			res.send('hello world');
+		});
+
+		app.listen(3000, function() {
+			console.log('Example app listening on part 30001');
+		});
+
+		虽然Express的API很简单，但是其基于ES5的语法，要实现异步代码，只有一个办法，回调。如果异步嵌套层次过多，代码写起来就非常难看
+
+		app.get('/test',function(req,res) {
+			fs.readFile('/file',function(err, data) {
+				if(err) {
+					res.status(500).send('read file1 error');
+				}
+				fs.readFile('/file2', function(err,data) {
+					if(err) {
+					res.status(500).send(read file2 error)}
+					res.type('text/plain');
+					res.send(data);
+				});
+			});
+		});
+
+		虽然可以用async这样的库来组织异步代码，但是用回调写一部实在是太痛苦了
+
+   koa 1.0
+
+		随着Node.js开始支持ES6，Express团队基于ES6的generator重新编写了下一代的web框架koa.其使用gneerator实现异步，代码看起来像同步
+
+		var koa = require('koa');
+		var app = koa();
+		app.use('/test', function*() {
+			yield doReadFile1();
+			var data = yield doReadFile2();
+			this.body = data;
+		});
+		
+		app.listen(30000);
+
+		用generator实现异步回调简单不少，但是generator的本意并不是异步。Promise才是为异步设计的，但是其写法复杂，为了简化代码ES7引入了新的关键字 async和await
+
+		async function() {
+			var data = await fs.read('/file1');
+		}
+
+   koa2
+   其完全使用Promise并配合async来实现异步。
+
+		koa2的代码如下：
+
+		app.use(async(ctx,next)=>{
+			await next();
+			var data = await doReadFile();
+			ctx.response.type = 'text/plain';
+			ctx.response.body = data;
+		});
+
+#####koa入门
+
+		//导入koa，和koa 1.x不同，在koa2中，我们导入的是一个class,因此用大写的Koa表示
+		const Koa = require('koa');
+		//创建一个Koa对象表示web app本身
+		const app = new Koa();
+		//对于任何请求，app将调用该异步函数处理请求
+		app.use(async(ctx, next) => {
+    		await next();
+    		ctx.response.type = 'text/html';
+    		ctx.response.body = '<h1>Hello, koa2!</h1>';
+		});
+		//在端口3000监听
+		app.listen(3000);
+		console.log('app started at port 3000...');
+
+		//对于每一个http请求，koa将调用我们传入的异步函数来处理
+		async (ctx, next) => {
+    		await next ();
+    		//设置response的Content-Type:
+    		ctx.response.type = 'text/html';
+    		ctx.response.body = '<h1>Hello world!</h1>';
+		}
+
+		//其中参数ctx是由koa传入的封装了request和response的变量，我们可以通过它访问request和response,next是koa传入的将要处理的下一个异步函数
+
+		上面的异步函数中，我们首先用await next();处理下一个异步函数，然后设置response的Content-Type和内容。
+
+		由async标记的函数称为异步函数，在异步函数中，可以用await调用两一个异步函数，这两个关键字将在ES7中引入
+
+		koa这个包怎么装，app.js才能正常导入它
+
+ 		一：可以用npm命令直接安装koa 命令行切换到目录hello-koa这个目录，然后执行命令
+		
+			C：\...\hello-koa>npm install koa@2.0.0
+
+		二：在hello-koa这个目录下创建一个package.json,这个文件描述了我们hello-koa工程会用到的包
+
+			{
+    			"name": "hello-koa2",
+    			"version": "1.0.0",
+    			"description": "Hello Koa 2 example with async",
+    			"main": "start.js",
+    			"scripts": {
+        		"start": "node start.js"
+    		},
+    		"keywords": [
+        		"koa",
+        		"async"
+    		],
+    		"author": "Michael Liao",
+    		"license": "Apache-2.0",
+    		"repository": {
+        		"type": "git",
+        		"url": "https://github.com/michaelliao/learn-javascript.git"
+    		},
+    		"dependencies": {
+        		"babel-core": "6.13.2",
+        		"babel-polyfill": "6.13.0",
+        		"babel-preset-es2015-node6": "0.3.0",
+        		"babel-preset-stage-3": "6.5.0",
+        		"koa": "2.0.0"
+    		}
+			}
+
+		其中dependencies描述了我们工程依赖的包以及版本号。其他字段均用来描述项目信息，可填写。任意
+
+		然后我们在hello-koa目录下执行npm install就可以把所需的包一次性全部装好
+
+		C:\...\hello-koa> npm install
+
+		很显然第二个方法更可靠，我们只要在pachage-json正确设置了依赖，npm就会把所有用到的包都装好
+
+		任何时候都可以直接删除node_modules目录，因为使用npm install命令可以完整的重新下载所有的依赖，
+
+		当ES7不支持时，需要用Babel进行转换代码
+
+   Babel
+   其是一个javascript编写的转码器，它可以把高版本的Javascript代码转换成低版本的Javascript代码，并保持逻辑不变，这样就可以在低版本的javascript环境下运行。
+
+   需要指定 presets和plugins  
+
+   如何进行转码：
+   每次app.js启动前让babel转码，我们就不需要手动做这件事情了。
+
+   		编写一个start.js文件，在这个文件中，先加载babel-core/register,再加载app.js:
+
+		var register = require('babel-core/register');
+
+		register({
+			presets: ['stage-3']
+		});
+	
+		require('./app.js');
+
+		然后再package.json中添加依赖包
+
+		"dependencies": {
+    		"babel-core": "6.13.2",
+    		"babel-polyfill": "6.13.0",
+    		"babel-preset-es2015-node6": "0.3.0",
+    		"babel-preset-stage-3": "6.5.0",
+    		"koa": "2.0.0"
+		}
+
+		再使用命令行npm install 安装
+
+		node start.js命令启动程序  npm start此时package.json中文件的start对应的命令：
+
+		"scripts": {
+    		"start": "node start.js"
+		}
+
+   koa middleware
+
+		app.use(async (ctx, next) => {
+    		await next();
+    		ctx.response.type = 'text/html';
+    		ctx.response.body = '<h1>Hello, koa2!</h1>';
+		});
+
+		没收到一个http请求，koa会调用通过app.use()注册的async函数，并传入ctx和next参数。
+
+		调用await next()的原因：
+
+		原因是koa把很多async函数组成一个处理链，每个async函数都可以做一些自己的事情，然后用await next()来调用下一个async函数，我们把每个async函数称为middleware，这些middleware可以组合起来，完成许多功能。
+
+		例如以下，可以用3个middleware组成的处理链，依次打印日志，记录处理时间，输出html
+
+		app.use(async (ctx, next) => {
+			console.log('${ctx.request.method} ${ctx.request.url}');
+			await next();
+		});
+
+		app.use(async (ctx, next) => {
+			const start = new Date().getTime();
+			await next();
+			const ms = new Data().getTime()-start;
+			console.log('Time: ${ms}ms');
+		});
+
+		app.use(async (ctx, next) => {
+			await next();
+			ctx.response.type = 'text/html';
+			ctx.response.body = '<h1>Hello world</h1>';
+		});
+
+	app.use()的顺序决定了middleware的顺序
+
+		如果其中一个middleware没有调用await next()那么后续的middleware将不会再执行
+
+		例如检验用户权限的时候
+
+		app.use(async (ctx, next) => {
+			if(await checkUserPermission(ctx)) {
+				await next();
+			} else {
+				ctx.response.status = 403;	
+			}
+		});
+
+		ctx.url=ctx.request.url   ctx.type = ctx.response.type
+
+#####处理URL
+
+   正常情况下，我们应该对不同的URL调用不同的处理函数，这样才能返回不同的结果
+
+   koa-router为了处理URL，我们需要引入koa-router这个middleware,让它负责处理URL映射。
+
+		在上节中的hello-koa工程复制一份，重命名url-koa
+
+		先在package.json中添加依赖项：
+		"koa-router":"7.0.0"
+
+		然后使用npm install安装
+
+		接下来，我们修改app.js，使用koa-router来处理URL：
+
+		const Koa = require('koa');
+		const router = require('koa-router')();
+		const app = new Koa();
+
+		app.use(async (ctx, next) => {
+			console.log('Process ${ctx.request.method} ${ctx.request.url}...');
+		});
+
+		router.get('/hello/:name', async (ctx, next) =>   {
+			var name = ctx.params.name;
+			ctx.response.body = '<h1>hello, ${name}</h1>';
+		});
+
+		router.get('/',async(ctx, next) => {
+			ctx.response.body = '<h1>Index</h1>';
+		});
+
+		app.use(router.routes());
+
+		app.listen(3000);
+		console.log('app started at port 3000...');
+		
+		注意导入koa-router的语句最后的（）是函数调用
+		相当于：
+
+		const fn_router = require('koa-router');
+		const router = fn_router();
+
+		然后我们使用router.get('/path',async fn)来注册一个GET请求。可以在请求路径中使用带变量的/hello/:name,变量可以通过ctx.params.name访问
+
+		再进行输入时，就可以运行不同的URL
+
+   处理POST请求：
+
+   		用router.get('/path', async fn)处理的是GET请求，可以用router.poat('/path', async fn)处理post请求
+
+		用post处理url时，我们通常会遇到一个问题post请求通常会发送一个表单或者JSON，它作为request的body发送，但无论是NOde.js提供的原始的request对象，还是koa提供的request对象，都不提供解析request的body的功能。
+
+		所以我们有需要引进一个middleware来解析原始request请求，然后，把解析的参数，绑定到ctx.request.body中，koa-bodyparser就是来做这样的事情的
+
+		在package.json中添加：
+
+		"koa-bodyparser":"3.2.0"
+		使用npm进行安装，下面修改app.js引入koa-bodyparser:
+
+		const bodyParser = require('koa-bodyparser');
+
+		在合适的位置上加上 app.use(bodyParser());
+
+		由于middleware的顺序很重要，这个koa-boayparser必须在router之前被注册到app对象上
+
+
+		简单的处理post请求：
+
+		router.get('/', async (ctx, next) => {
+    		ctx.response.body = `<h1>Index</h1>
+        		<form action="/signin" method="post">
+            		<p>Name: <input name="name" value="koa"></p>
+            		<p>Password: <input name="password" type="password"></p>
+            		<p><input type="submit" value="Submit"></p>
+        		</form>`;
+		});
+
+		router.post('/signin', async (ctx, next) => {
+			var 
+				name = ctx.request.body.name ||'',
+				password = ctx.request.body.password ||'';
+			console.log('sigin with name: ${name},password:${password}');
+			if(name === 'koa' && password === '1235') {
+				ctx.response.body = '<h1>hello ${name}</h1>';
+			} else {
+				ctx.response.body = '<h1>Login failed!</h1>
+        		<p><a href="/">Try again</a></p>';
+			}
+		});
+
+
+		注意我们使用到 var name = ctx.request.body.name || ''拿到表单的name字段，如果该字段不存在，默认值为''
+
+		类似的， put  delete  head 请求也可以由router处理
+
+
+   重构：
+
+		所有的处理url的函数都放到app.js中会很乱，而且每增加一个URL，就需要修改app.js。随着URL越来越多，app.js就会越来越长。
+
+		如果能把url的处理函数集中到某个js文件，或者某几个js文件中就好了，然后让app.js自动导入所有处理URL的函数
+
+		我们对项目进行重构
+
+		url2-koa/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- controllers/
+		|  |
+		|  +- login.js <-- 处理login相关URL
+		|  |
+		|  +- users.js <-- 处理用户管理相关URL
+		|
+		+- app.js <-- 使用koa的js
+		|
+		+- start.js <-- 启动入口js
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+
+		var fn_index = async (ctx, next) => {
+    		ctx.response.body = `<h1>Index</h1>
+        		<form action="/signin" method="post">
+            		<p>Name: <input name="name" value="koa"></p>
+            		<p>Password: <input name="password" type="password"></p>
+            		<p><input type="submit" value="Submit"></p>
+        		</form>`;
+			};
+
+		var fn_signin = async (ctx, next) => {
+    		var
+        		name = ctx.request.body.name || '',
+        		password = ctx.request.body.password || '';
+    		console.log(`signin with name: ${name}, password: ${password}`);
+    		if (name === 'koa' && password === '12345') {
+        		ctx.response.body = `<h1>Welcome, ${name}!</h1>`;
+    		} else {
+        		ctx.response.body = `<h1>Login failed!</h1>
+        		<p><a href="/">Try again</a></p>`;
+    		}
+		};
+
+		module.exports = {
+			'GET /': fn_index,
+			'POST /signin': fn_signin
+		};
+
+		这个index.js通过module.exports把两个URL处理函数暴露出来
+
+		现在我们修改app.js，让它自动扫描controllers目录，找到所有的js文件，导入然后注册每个URL
+
+		var files = fs.readdirSync(_dirname + '/controllers');
+		
+		var js_files = files.filter((f)=> {
+			return f.endsWith('.js');
+		});
+
+		for(var f of js_files) {
+			console.log('process controller: ${f}...');
+			let mapping = require(__dirname + '/controllers/' +f);
+			for(var url in mapping) {
+				if(url.startsWith('GET')){
+				var path = url.substring(4);
+				router.get(path, mapping[url]);
+				console.log('register URL mapping: GET ${path}');
+			} else if(url.startsWith('POST'))	{
+				var path = url.substring(5);
+				router.post(path, mapping[url]);
+				console.log('register URL mapping: POST ${path}');
+			} else {
+				console.log('invalid URL: ${url}');
+			}
+		}
+
+		将其拆分成更小的单位：
+
+		function addMapping(router, mapping) {
+    		for (var url in mapping) {
+        		if (url.startsWith('GET ')) {
+            		var path = url.substring(4);
+            		router.get(path, mapping[url]);
+            		console.log(`register URL mapping: GET ${path}`);
+        		} else if (url.startsWith('POST ')) {
+            		var path = url.substring(5);
+            		router.post(path, mapping[url]);
+            		console.log(`register URL mapping: POST ${path}`);
+        		} else {
+            		console.log(`invalid URL: ${url}`);
+        		}
+    		}
+		}
+
+		function addControllers(router) {
+    		var files = fs.readdirSync(__dirname + '/controllers');
+    		var js_files = files.filter((f) => {
+        		return f.endsWith('.js');
+    		});
+
+    		for (var f of js_files) {
+        		console.log(`process controller: ${f}...`);
+        		let mapping = require(__dirname + '/controllers/' + f);
+        		addMapping(router, mapping);
+    		}
+		}
+
+		addControllers(router);
+
+   Controller Middleware
+
+		最后我们把扫描controllers目录和创建router的代码从app.js中提取出来，作为一个简单的middleware使用，命名为controller.js:
+
+		const fs = require('fs');
+		function addMapping(router, mapping) {
+			...
+		}
+
+		function addControllers(router, dir) {
+			...
+		}
+
+		module.exports = function (dir) {
+			let
+				controller_dir = dir || 'controller',
+				router = require('koa-router')();
+			addControllers(router, controllers_dir);
+			return router.routes();
+		}
+
+		const controller = require('./controller');
+		...
+		
+		app.use(controller());
+		...
+  		 
+	经过处理的url2-koa目前具有非常好的模块化，所有处理的URL的函数按功能组存放在controllers目录，今后我们只需要不断往这个目录下加东西就可以了，app.js保持不变
+
+#####使用Nunjucks(模板引擎)
+
+		模板引擎就是基于模板配合数据构造出字符串输出的一个组件，例如：
+
+		function examResult (data) {
+			return'${data.name}同学成绩为${data.math}分'
+		}
+
+		当我们输入数据如下：
+		examResult({
+			name: '小明',
+			math: 87
+		});
+
+		引擎模板把模板字符串里面的变量替换之后就可以实现模板功能，得到输出：
+		小明同学成绩为87分
+
+      	模板引擎最常见的就是输出网页
+
+   转义：对于特殊字符要转义，避免受到XSS攻击
+
+		例如变量name的值不是小明，而是小明<script>...</script>
+		就会自动恶意执行javascript，浏览器
+
+   格式化：对于不同类型的变量要进行格式化，比如，货币需要变成12,345.00这样的格式，日期需要变成2016-01-01这样的格式
+
+
+   简单逻辑：模板还需要能执行一些简单逻辑比如按条件输出内容：
+
+		{{ name }}同学，
+		{% if score >= 90 %}
+			成绩优秀，应该奖励
+		{% else %}
+			成绩不优秀，不应奖励
+		{% endif %}
+
+   Nunjucks  纯的JavaScript编写的模板引擎，既可以在Node环境下，又可以运行在浏览器端，但是主要运行在node环境下，浏览器有更好的模板解决方案，例如MVVM框架
+
+		function render(view, model) {
+			...
+		}
+
+		其中view就是模板的意思，又称为视图，model就是数据，javascript中即为简单的Object.render函数返回一个字符串就是模板的输出。
+
+		use-nunjucks/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- views/
+		|  |
+		|  +- hello.html <-- HTML模板文件
+		|
+		+- app.js <-- 入口js
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+		在package.json中添加nunjucks的依赖：
+		"nunjucks":"2.4.2"
+		模板引擎可以单独使用，并不需要依赖于koa.用npm install安装所有依赖的包。
+
+		我们使用Nunjucks的函数render.在app.js中编写代码如下：
+
+		const nunjucks = require('nunjucks');
+		
+		function creatEnv(path, opts) {
+			var 
+				autoescape = opts.autoescape && true,
+				noCache = opts.noCache || false,
+				watch = opts.watch || false,
+				throwOnUndefined = opts.throwOnUndefined || false,
+				env = new nunjucks.Environment(
+					new nunjucks.FileSystemLoader('views', {	
+						noCache: noCache,
+						watch: watch,
+					}), {
+						autoescape: autoescape,
+						throwOnUndefined: throwOnUndefined
+					}
+				);
+				if(opts.filters) {
+					for(var f in opts.filters) {
+						env.addFilter(f, opts.filters[f]);
+					}
+				}
+				return env;
+		}
+
+		var env = createEnv('views', {
+			watch: true,
+			filters: {
+				hex: function(n) {
+					return '0x' + n.toString(16)
+				}
+			}
+		});
+
+		变量env就表示Nunjucks模板引擎对象，它有一个render(view, model)方法，正好传入view和model两个参数，并返回字符串。
+
+		创建env需要的参数可以查看文档获知，我们使用autoescape = opts.autoescape && true 这样的代码给每个参数加上默认值，最后使用new nunjucks.FileSystemLoader('views')创建一个文件加载系统，从views目录中读取模板。
+
+		比如：我们编写一个hello.html文件，放到views目录下，内容如下：
+
+		<h1>Hello {{ name }}</h1>
+
+		然后我们就可以使用下面 的代码进行渲染这个模板：
+
+		var s = env.render('hello.html', {name: '小明'});
+		console.log(s);
+
+		若其中有javascript代码，也会原样输出，就保证了避免恶意输出代码
+
+ 		可以使用Nunjucks提供的功能强大的tag，编写条件判断、循环等功能，例如：
+
+		<body>
+			<h3>Fruits list</h3>
+			{% for f in fruits %}
+		</body>
+
+   Nunjucks模板最强大功能在于模板的继承。仔细观察各种网站可以发现，几乎每个模板都重复头尾，一旦修改头尾，就需要改动所有的模板。更好的方式是继承。先定义一个基本的网页框架base.html
+
+		<html>
+			<body>
+				{% block header %} <h3>Unnamed</h3> {% endblock %}
+				{% block body %} <div>No body</div> {% endblock %}
+				{% block footer %} <div>copyright</div> {% endblock %}
+			</body>
+
+   base.html定义了三个可以编辑的块，分别命名为header、body。footer。子模板有选择的对块进行重新定义
+
+			{% extends 'base.html' %}
+
+			{% block header %}<h1>{{ header }}</h1>{% endblock %}
+
+			{% block body %}<p>{{ body }}</p>{% endblock %}
+
+   然后，我们对子模板进行渲染
+
+		console.log(env.render('extend.html', {
+			header: 'hello',
+			body: 'bla...'
+		}));
+
+   性能：对于模板渲染本身来说，速度是非常快的，就是拼字符串，纯CPU操作。性能问题主要出现在从文件读取模板内容这一步。这是一个IO操作，在node.js的环境中，我们知道，单线程的javascript最不能忍受的就是同步的IO。但Nujucks默认就使用同步的IO读取模板文件。
+
+		但是其会对内容进行缓存，就是说模板文件最多读取一次，就会放在内存中，后面的请求是不会再读取吧文件的，只要我们指定了noCache: false这个参数。
+
+		在开发环境下，可以关闭cache，这样每次重新加载，模板，便于实时的修改模板。在生产环境下，一定要打开擦车，这样就不会有性能问题
+
+#####使用mvc
+
+   我们已经可以使用koa处理不同的URL，还可以使用Nunjucks渲染模板，所以可以把两者结合起来
+
+   当用户通过浏览器请求一个URL,koa将调用异步函数处理该URL。这个异步函数内部，我们用一行代码：
+
+		ctx.render('home.html', { name: 'Michael' });
+		通过Nunjucks把数据用指定的模板渲染成HTML，然后输出给浏览器，用户就可以看搜啊渲染后的页面了
+
+		浏览器请求：  GET/Michael  (name = 'Michael')
+
+		app.js ->    //GET /:name
+					async(ctx, next) => {
+						ctx.render(home.html, {
+							name: ctx.request.params.name
+						});
+					} //变量进行了替换，替换为{{ name }}为'Michael'
+
+		模板			<html>
+						<body>
+							<p>hello, {{ name }}!</p>
+						</body>
+					</html> 		
+
+		用户看到的：  <html>
+						<body>
+							<p>hello, Michael!</p>
+						</body>
+					</html> 
+
+		这就是传说中的MVC： Model-View-Controller,
+			
+			异步函数是C： Controller(负责业务逻辑，比如检查用户名是否存在，取出用户信息等等)
+
+			包含变量的{{ name }}的模板就是V： View,View负责显示逻辑，通过简单的替换一些变量，View最终输出的就是用户看到的HTML
+
+			Model是用来传给View的，这样View在替换变量的时候，就可以从Model中去除相应的数据（在上面的例子中Model就是一个javascript对象：{ name: 'Michael' }）
+
+			全部整合之后，文件目录如下：
+
+			view-koa/
+			|
+			+- .vscode/
+			|  |
+			|  +- launch.json <-- VSCode 配置文件
+			|
+			+- controllers/ <-- Controller
+			|
+			+- views/ <-- html模板文件
+			|
+			+- static/ <-- 静态资源文件
+			|
+			+- controller.js <-- 扫描注册Controller
+			|
+			+- app.js <-- 使用koa的js
+			|
+			+- start.js <-- 启动入口js
+			|
+			+- package.json <-- 项目描述文件
+			|
+			+- node_modules/ <-- npm安装的所有依赖包
+
+		安装所需要的包：然后   npm install
+
+		首先编写以下两个controller:
+
+		处理首页的GET/
+		
+			async (ctx,next) => {
+				ctx.render('index.html', {
+					title: 'welcome'
+				});
+			}
+
+			注意到koa并没有在ctx对象上提供render方法，这里我们假设应该这么使用，这样，我们在编写Controller的时候，最后一步调用ctx.render(view, model)就完成了页面的输出。
+
+
+		处理登录请求POST/signin
+
+			async (ctx, next) => {
+				var 
+					email = ctx.request.body.email || ''
+					password = ctx.request.body.password || '';
+				if(email === 'admin@example.com' && password ==='123456') {
+					ctx.render('signin-ok.html', {
+						title: 'sign is ok',
+						name: 'Mr Node'
+					});
+				} else {
+					ctx.render('signin-failed.html', {
+						title: 'sign in failed'
+					});
+				}
+			}
+
+		由于请求登录是一个POST,我们就用ctx.request.body.<name>拿到POST请求的数据，并给一个默认值。
+
+		登录成功我们就用signin-ok.html渲染，登录失败时我们用signin-failed.html渲染，所以，我们需要三个view:
+
+			index.html
+			signin-ok.html
+			signin-failed.html
+
+		编写View
+		编写View的时候，我们实际上在编写HTML页，为了让这个页面看起来美观大方，使用一个现成的CSS框架是非常有必要的。我们用bootstrap这个CSS框架。从首页下载zip包解压，我们把所有的静态资源文件放到/static目录下：
+
+			view-koa/
+			|
+			+- static/
+   			|
+   			+- css/ <- 存放bootstrap.css等
+   			|
+   			+- fonts/ <- 存放字体文件
+   			|
+   			+- js/ <- 存放bootstrap.js等
+
+		这样我们在编写HTML的时候，可以直接用Bootstrap的CSS
+
+		<link rel="stylesheet" href="/static/css/bootstrap.css">
+
+		那么如何处理静态文件
+
+		我们把所有的静态文件全部放入/static目录，目的就是能统一处理静态文件。在koa中，我们需要编写一个middleware,处理以/static/开头的URL
+
+			我们首先创建一个能处理静态文件的middleware:
+
+			const path = require('path');
+			const mime = require('mime');
+			const fs = require('mz/fs');
+		
+			function staticFiless(url, dir) {
+				return async (ctx, next) => {
+					let rpath = ctx.request.path;
+					
+					if(rpath.startsWith(url)) {
+						let fp = path.join(dir, rpath.substring(url.length));
+						if(await fs.exists(fp)) {
+							ctx.response.type = mime.lookup(rpath);
+							ctx.response.body = await fs.readFile(fp);
+						} else {
+							ctx.response.status = 404;
+						}
+					} else {
+						await next();
+					}
+				};
+			}
+
+			module.exports = staticFiles;
+
+			staticFiles是一个普通函数，它接收两个参数，URL前缀和一个目录，然后返回一个async函数。这个async函数会判断当前的URL是否以指定的前缀开头，如果是，就把URL的路径视为为文件，并发送文件内容。如果不是，这个asynv函数就不做任何事情，而是简单的调用await next()让下一个middleware去处理请求。
+
+			我们使用了一个mz的包，并通过require('mz/fs');导入。mz提供的API和Node.js的fs模块完全相同，但ffs模块的使用回调，而mz封装了fs对应的函数,并改为Promise。这样我们就可以非常简单的使用await调用mz的函数，而不需要任何回调。
+
+			最后，这个middleware使用起来也很简单，在app.js里加一行代码：
+
+				let staticFiles = require('./static-files');
+				app.use(staticFiles('/static/',_dirname + '/static'));
+
+   集成Nunjucks
+
+		实际上也是编写一个middleware,这个middleware的作用是给ctx对象绑定一个render(view, model)的方法，这样后面的Controlier就可以调用这个方法来渲染模板了
+
+		创建一个templating.js来实现这个middleware:
+
+			const nunjucks = require('nunjucks');
+			
+			function createEnv(path, opts) {
+				var 
+					autoescape = opts.autoescape && true,
+        			noCache = opts.noCache || false,
+        			watch = opts.watch || false,
+        			throwOnUndefined = opts.throwOnUndefined || false,
+        			env = new nunjucks.Environment(
+            			new nunjucks.FileSystemLoader(path || 'views', {
+                			noCache: noCache,
+                			watch: watch,
+            			}), {
+                			autoescape: autoescape,
+                			throwOnUndefined: throwOnUndefined
+            			});
+    			if (opts.filters) {
+        			for (var f in opts.filters) {
+            			env.addFilter(f, opts.filters[f]);
+        			}
+    			}
+    			return env;
+			}
+
+			function templating(path, opts) {
+				var env = createEnv(path, opts);
+				return async (ctx, next)=> {
+					ctx.render = function(view, model) {
+						ctx.response.body = env.render(view, Object.assign({}, ctx.state || {}, model || {}));
+						ctx.response.type = 'text/html';
+					};
+					await next();
+				};
+					
+			}
+			
+			module.exports = templating;
+
+			注意到createEnv()函数和前面使用的Nunjucks时编写的函数时一模一样的。我们主要关心templating()函数，它会返回一个middleware，在这个middleware中，我们只给ctx安装了一个render()函数，其他事情什么也没有做，就继续调用了下一个middleware.
+
+			使用时，我们在app.js添加如下代码：
+
+			const isProduction = process.env.NODE_ENV ==='production';
+		
+			app.use(templating('view', {
+				noCache: !isProducting,
+				watch: !isProduction
+			}));
+
+			这里我们定义了一个常量isProduction,它判断当前的环境是否为production环境。如果是，就使用缓存，如果不是就关闭缓存。
+
+
+			node.js在全局变量process中定义了一个环境变量env.NODE_ENV，为什么要使用该环境变量呢？因为我们在开发的时候，环境变量应该设置为'development',而部署到服务器时，环境变量应该设置为'production'.在编写代码的时候，要根据当时当前的环境做不同的判断。
+
+			注意：  生产环境上必须配置环境变量NODE_ENV = 'production',而开发环境不需要配置，实际上NODE_ENV可能是undefined,所以判断的时候，不要用NODE_ENV === 'development'
+	
+
+			类似的，我们在使用上面编写的处理静态文件的middleware时，也可以根据环境变量判断：
+
+			if(! isProduction) {
+				let staticFiles = require('./static-files');
+				app.use(staticFiles('/static',_dirname+'/static'));
+			}	
+
+			这是因为在生产环境下，静态文件是由部署在最前面的反向代理器(如：Nginx)处理的，Node程序不需要处理静态文件。而在开发环境下，我们希望koa 能顺带处理静态文件，否则，就必须手动配置一个反向代理服务器，这样导致开发环境非常复杂。
+
+   编写View
+
+		在编写View的时候，非常有必要先编写一个base.html作为骨架，其他模板都继承自base.html.这样才能大大减少重复工作
+		
+		参考： Bootstrap的官网编写的简单的base.html.
+
+   运行：一切顺利的话，这个view-koa工程应该可以顺利运行。运行前，我们再检查一下app.js里的middleware的顺序：
+
+		第一个middleware是记录URL以及页面执行时间：
+
+		app.use(async (ctx, next) => {
+    		console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
+    		var
+        		start = new Date().getTime(),
+        		execTime;
+    			await next();
+    			execTime = new Date().getTime() - start;
+    			ctx.response.set('X-Response-Time', `${execTime}ms`);
+			});
+
+		第二个是middleware处理静态文件：
+
+		if (! isProduction) {
+    		let staticFiles = require('./static-files');
+    		app.use(staticFiles('/static/', __dirname + '/static'));
+		}
+		
+		第三个middleware解析post请求：
+
+		app.use(bodyParser());
+
+		第四个middleware负责给ctx加上render()来使用Nunjucks:
+
+		app.use(templating('view', {
+    		noCache: !isProduction,
+    		watch: !isProduction
+		}));
+
+		最后一个middleware处理URL路由
+
+		app.use(controller());
+
+   扩展
+
+   注意到ctx.render内部渲染模板时，Model对象并不是传入的model变量，而是：
+
+		Object.assign({}, ctx.state || {}, model ||{})
+
+		首先，model || {}确保了即使传入undefined,model也会变为默认值{}.Object.assign()会把除第一个参数外的其他参数的所有属性复制到第一个参数中。第二个参数是ctx.state||{},这个目的是为了能把一些公共的变量放入ctx.state并传给View.
+		
+		例如，某个middleware负责检查用户的权限，它可以把当前用户放入ctx.state中：
+
+		app.use(async (ctx, next) => {
+			var user = tryGetUserFormCookie(ctx.request);
+			if(user) {
+				ctx.state.user = user;
+				await next();
+			} else {
+				ctx.response.status = 403;
+			}
+		}) 
+
+		这样就没有必要在每个Controller的async函数中都把user变量放入model中
+
+###mysql
+
+   访问数据库
+		程序运行的时候，数据都是在内存中。当程序终止的时候，通常都需要将数据保存到磁盘上，无论是保存到本地磁盘还是通过网络保存到服务器上，最终都会将数据写入磁盘文件。
+
+#####使用Sequelize
+
+   对于node.js来说，访问MySql也是通过网络发送SQL命令给MySql服务器。这个访问mySql服务器的软件包称为mysql的驱动程序。
+
+   ORM
+
+		connection.query('SELECT * FROM users WHERE id=?', ['123'], function(err, rows) {
+			if(err) {
+				//err
+			} else {
+				for(let row in rows) {
+					processRow(row);
+				}
+			}
+		});
+
+  		考虑到数据表是一个二维表：
+
+		mysql> select * from pets;
+			+----+--------+------------+
+			| id | name   | birth      |
+			+----+--------+------------+
+			|  1 | Gaffey | 2007-07-07 |
+			|  2 | Odie   | 2008-08-08 |
+			+----+--------+------------+
+			2 rows in set (0.00 sec)
+
+		每一行可以用一个javascript对象进行表示，例如第一行：
+
+		{
+			"id": 1,
+			"name": "Gaffif",
+			"birth": "2007-07-07"
+		}
+
+		这种技术就是ORM技术： Object-Relational Mapping,把关系数据库的表映射到对象上，
+
+		ORM框架（sequelize框架帮我们把对象变成数据库中的行）
+			比如：用sequelize查询表pets
+
+			Pet.findALL()
+			   .then(function (pets) {
+					for(let pet in pets) {
+						console.log('${pet.id}: ${pet.name}');
+					}
+				}).catch(function (err) {
+					//error
+				});
+
+		因为sequelize返回的对象是Promise,所以我们可以使用then()和catch()分别异步的响应成功和失败
+
+		用ES7的await来调用任何一个promise对象，可以使代码变得更加简洁
+
+		
+			var pets = await Pet.findALL();
+			但是await有一个限制，就是只能在async函数中调用，所以：
+
+			(async () => {
+				var pets = await Pet.findAll();
+			})();
+
+		考虑到koa的处理函数都是async函数，所以我们实际上将来在koa的async函数中直接写await访问数据库就可以了。
+
+		这也是我们采用sequelize的原因：只要API返回promise,就可以用await调用，代码写起来非常简单
+
+   实战：在mysql中执行命令
+
+		grant all privileges on test.* to 'www'@'%' identified by 'www' ;
+		
+		use test;
+
+		create table pets (
+			id varchar(50) not null,
+			name varchar(100) not null,
+			gender bool not null,
+			createAt bigint not null,
+			primary key(id)
+		) engine=innodb
+
+		创建hello-sequelize工程结构如下：
+
+		hello-sequelize/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- init.txt <-- 初始化SQL命令
+		|
+		+- config.js <-- MySQL配置文件
+		|
+		+- app.js <-- 使用koa的js
+		|
+		+- start.js <-- 启动入口js
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+
+		添加依赖包;
+
+		"babel-core": "6.13.2",
+		"babel-polyfill": "6.13.0",
+		"babel-preset-es2015-node6": "0.3.0",
+		"babel-preset-stage-3": "6.5.0",
+		"sequelize": "3.24.1",
+		"mysql": "2.11.1"
+
+		config.js:
+
+		
+		var config = {
+    		database: 'test', // 使用哪个数据库
+    		username: 'www', // 用户名
+    		password: 'www', // 口令
+    		host: 'localhost', // 主机名
+    		port: 3306 // 端口号，MySQL默认3306
+		};
+
+		module.exports = config;
+
+		下面我们在app.js中操作数据库，使用sequelize操作数据库需要做两件准备工作：
+
+		第一步：创建一个sequelize对象实例
+
+			const Sequelize = require('sequelize');
+			const config = require('./config');
+
+			var sequelize = new Sequelize(config.database, config.username, config.password, {
+				host: config.host,
+				dialect: 'mysql',
+				pool: {
+					max: 5,
+					min: 0,
+					idle: 30000	
+				}
+			});
+
+		第二步定义模型Pet,告诉Sequelize如何映射数据库表：
+
+			var Pet = sequelize.define('pet', {
+				id: {
+					type: Sequelize.STRING(50),
+					primaryKey: true
+				},
+
+				name: Sequelize.STRING(100),
+				gender: Sequelize.BOOLEAN,
+				createdAt: Sequelize.BIGINT
+			}, {
+					timestamps: false
+			});
+
+		用sequelize.define()定义Model时，传入名称pet,默认表名是pets。第二个参数指定列名和数据类型，如果是主键，需要更详细的指定。第三个参数是额外的配置。我们传入{timestamps: false}是为了关闭Sequelize的自动添加 的timestamp的功能
+
+		现在我们往数据库中加入一些数据：
+
+		用promise的方式写：
+
+		var now = Date.now();
+
+		Pet.create({
+			id: 'g-' + now,
+			name: 'Gaffey',
+			createAt: now
+		}).then(function (p) {
+			console.log('created' + JSON.stringify(p));
+		}).catch(function (err) {
+			console.log('failed:'　+ err　);
+		});
+
+		用await的方式写：
+
+		(async () => {
+			var dog = await Pet.create({
+				id: 'd-' + now,
+				name: 'Odie',
+				createAt: now
+			});
+			console.log('create: ' + JSON.stringify(dog));
+		})();
+
+		显然await代码更好用。查询数据的时候，用await写法如下：
+
+		(async () => {
+			var pets = await Pet.findAll({
+				where: {
+					name: 'Gaffey'
+				}
+			});
+			console.log('find ${path.length} pets: ');
+			for (let p of pets) {
+				consloe.log(JSON.stringfy(p));
+			}
+		})();
+
+		更新数据  调用的是实例的save()方法：
+
+		(async () => {
+			var p = await queryFormSomewhere();
+			p.gneder = true;
+			p.updateAt = Date.now();
+			p.version ++;
+			await p.save();
+		})();
+
+		删除数据，可以对查询到的实例调用destroy()方法
+
+		(async () => {
+			var p = await queryFormSomewhere();
+			await p.destroy();
+		})();
+
+		运行代码：可以看到Sequelize打印出的每一个SQL语句
+
+		MOdel
+
+		我们通过把sequlize.define()返回的pet称为Model，它表示一个数据模型
+
+		我们通过把Pet.findAll()返回的一个或者一组对象称为Model实例，每个实例都可以直接通过JSON.stringify序列化为JSON字符串，但是和普通的JSON相比，他们多了save()和destroy()的方法。比如save()和destroy()方法。我们可以使用这些方法执行更新和者删除操作。
+
+   所以，使用sequelize操作数据库的一般步骤就是：
+
+		首先，通过某个Model对象的findAll()方法获取实例
+
+		如果想要更新实例，先对实例的属性赋予新值，在调用save()方法
+
+		如果删除实例，直接调用destroy()方法
+
+		注意findAll()方法可以接收where、order这些参数，这和将要生成的sql语句是对应的
+
+#####建立Model
+
+    我们首先定义的就是Model存放的文件夹必须在models内，并且以Model名字命名，例如： Pet.js  User.js等等
+
+	每个model必须遵守的规范：
+
+	1.统一主键，名称必须是id,类型必须是STRING(50)；
+	2.主键可以自己定，也可以由框架自动生成（如果为null或者undefined）；
+	3.所有字段默认为NOT NULL，除非显式指定
+	4.统一timestamp机制，每个model必须有createdAt、updetedAt和version,分别记录创建时间、修改时间和版本号。其中，createdAt和updatedAt以及BIGINT存储时间戳，最大的好处是无需处理时区，排序方便。version每次修改时自增。
+
+
+	所以我们不要直接使用Sequelize的API，而是通过db.js间接地定义Model.例如，User.js应该定义如下：
+
+	const db = require('../db');
+		
+	module.exports = db.defineModel('users', {
+		email: {
+			type: db.STRING(100),
+			unique: true
+		},
+		password: db.STRING(100),
+		name: db.STRING(100),
+		gender: db.BOOLEAN
+	});
+
+	这样User就有了email password name gender这四个业务段。id  createdAt  updatedAt version应该自动加上，而不是每个Model都去重复的定义
+
+	db.js的作用就是统一model的定义：
+
+	const Sequelize = require('sequelize');
+		
+	console.log('init sequelize');
+		
+	var sequelize = new Sequelize('dbname', 'username', 'password', {
+		host: 'localhost',
+		dialect: 'mysql',
+		pool: {
+			max: 5,
+			min: 0,
+			idle: 10000
+		}
+	});
+
+	const ID_TYPE = Sequelize.STRING(50);
+	
+	function defineModel(name, attributes) {
+    	var attrs = {};
+    	for (let key in attributes) {
+        	let value = attributes[key];
+        	if (typeof value === 'object' && value['type']) {
+            	value.allowNull = value.allowNull || false;
+            	attrs[key] = value;
+        	} else {
+            	attrs[key] = {
+                	type: value,
+                	allowNull: false
+            	};
+        	}
+    	}
+    	attrs.id = {
+        	type: ID_TYPE,
+        	primaryKey: true
+    	};
+    	attrs.createdAt = {
+        	type: Sequelize.BIGINT,
+        	allowNull: false
+    	};
+    	attrs.updatedAt = {
+        	type: Sequelize.BIGINT,
+        	allowNull: false
+    	};
+    	attrs.version = {
+        	type: Sequelize.BIGINT,
+        	allowNull: false
+    	};
+    	return sequelize.define(name, attrs, {
+        	tableName: name,
+        	timestamps: false,
+        	hooks: {
+            	beforeValidate: function (obj) {
+                	let now = Date.now();
+                	if (obj.isNewRecord) {
+                    	if (!obj.id) {
+                        	obj.id = generateId();
+                    	}
+                    	obj.createdAt = now;
+                    	obj.updatedAt = now;
+                    	obj.version = 0;
+                	} else {
+                    	obj.updatedAt = Date.now();
+                    	obj.version++;
+                	}
+            	}
+        	}
+    	});
+	}
+
+		我们定义的defineModel就是为了实现上述规则
+
+		Sequelize在创建，修改Entity时会调用我们指定的函数，这些函数通过hooks在定义Model时设定。我们在beforeValidate这个事件中根据是否是isNewRecord设置主键(如果主键为null或undefined)、设置时间戳或者版本号
+
+   数据库配置
+
+		我们把简单的config.js拆成3个配置文件
+
+		config-default.js: 存储默认的配置；
+		config-override.js: 存储特定的配置；
+		config-test.js:存储用于测试的配置；
+
+
+		config-default.js可以配置如下：
+
+		var config = {
+    		dialect: 'mysql',
+    		database: 'nodejs',
+    		username: 'www',
+    		password: 'www',
+    		host: 'localhost',
+    		port: 3306
+		};
+
+		module.exports = config;
+
+
+		config-override.js可应用实际配置：
+
+		var config = {
+    		database: 'production',
+    		username: 'www',
+    		password: 'secret-password',
+    		host: '192.168.1.199'
+		};
+
+		module.exports = config;
+
+		config-test.js可应用测试环境的配置：
+
+		var config = {
+    		database: 'test'
+		};
+
+		module.exports = config;
+
+		读取配置的时候，我们用config.js实现环境的不同读取不同的配置文件：
+
+		const defaultConfig = './config-default.js';
+		// 可设定为绝对路径，如 /opt/product/config-override.js
+		const overrideConfig = './config-override.js';
+		const testConfig = './config-test.js';
+
+		const fs = require('fs');
+
+		var config = null;
+
+		if (process.env.NODE_ENV === 'test') {
+    		console.log(`Load ${testConfig}...`);
+    		config = require(testConfig);
+		} else {
+    		console.log(`Load ${defaultConfig}...`);
+    		config = require(defaultConfig);
+    		try {
+        		if (fs.statSync(overrideConfig).isFile()) {
+            		console.log(`Load ${overrideConfig}...`);
+            		config = Object.assign(config, require(overrideConfig));
+        		}
+    		} catch (err) {
+        		console.log(`Cannot load ${overrideConfig}.`);
+    		}
+		}
+
+		module.exports = config;
+
+		具体的规则如下：
+		1.首先读取config-default.js;
+		2:如果不是测试环境，就读取config-override.js,如果文件不存在就或略
+		3：如果是测试环境，就读取config-test.js
+
+		这样做的好处是，开发环境下，团队统一使用默认的配置，并且无需config-override.js。部署到服务器时，由运维团队配置好config-override.js，以覆盖config-override.js的默认设置。测试环境下，本地和CI服务器统一使用config-test.js，测试数据库可以反复清空，不会影响开发
+
+   使用Model
+
+   要使用Model,就需要引入对应的Model文件，例如：User.js.一旦Model多了起来，如何引用也是一件麻烦事。自动化永远比手动效率高。我们写一个model.js，自动扫描并且导入所有的Model
+
+		const fs = require('fs');
+		const db = require('./db');
+		
+		let files = fs.readdirSync(_dirname + '/models');
+		
+		let js_files = files.filter((f)=>{
+			return f.endsWith('.js');
+		}, files);
+		
+		module.exports = {};
+
+		for(let f of js_files) {
+			console.log('import model from file ${f}...');
+			let name = f.substring(0, f.length - 3);
+			module.exports[name] = require(_dirname +'/modules/'+ f);
+		}
+
+		module.exports.sync = () => {
+			db.sync();
+		};
+
+		这样，需要用的时候，写起来就像这样：
+
+		const model = require('./model');
+		
+		let 
+			Pet = model.Pet,
+			User = model.User;
+
+		var pet = await Pet.create({... });
+
+		最终的工程结构：
+
+		model-sequelize/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- models/ <-- 存放所有Model
+		|  |
+		|  +- Pet.js <-- Pet
+		|  |
+		|  +- User.js <-- User
+		|
+		+- config.js <-- 配置文件入口
+		|
+		+- config-default.js <-- 默认配置文件
+		|
+		+- config-test.js <-- 测试配置文件
+		|
+		+- db.js <-- 如何定义Model
+		|
+		+- model.js <-- 如何导入Model
+		|
+		+- init-db.js <-- 初始化数据库
+		|
+		+- app.js <-- 业务代码
+		|
+		+- start.js <-- 启动入口js
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+   注意到我们其实不需要创建表的SQL，因为Sequelize提供了一个sync()方法，可以自动创建数据库。这个功能在开发和生产环境中没有什么用，但是在测试环境中非常有用。测试时，我们可以用sync()方法自动创建出表结构，而不是维护SQL脚本。这样就可以随时修改Model的定义，并立刻测试。开发环境下，首次使用sync()也可以自动创建出表结构，避免手动运行SQL问题。
+
+		init-db.js的代码非常简单：
+
+		require('babel-core/require')({
+			presets: ['stage-3']
+		});
+
+		const model = require('./model.js');
+		model.sync();
+
+		console.log('init db ok');
+		process.exit(0);
+
+#####mocha(测试驱动开发)
+
+	单元测试是用来对一个模块，一个函数或者一个类来进行正确性检验的测试
+
+	比如对函数abs(),我们可以编写一下几个测试用
+
+	输入正数，比如1等，期待返回值与输入值相等。
+
+	mocha
+
+	其是javascript的一种单元测试框架，既可以在浏览器环境下运行，也可以在node.js环境下运行
+	使用mocha，我们就只需要专注手动编写单元测试本身，然后，让mocha去自动运行所有的测试，并给出测试结果：
+
+		特点：
+
+		1.既可以测试简单的javascript函数，又可以测试异步代码，因为异步是javascript的特性之一；
+		2.可以自动运行所有的测试，也可以只运行特定的测试。
+		3.可以支持before  after  beforeEach  afterEach来编写初始化代码
+
+#####编写测试
+
+		编写一个hello.js，并且输出一个简单的求和函数：
+
+		module.exports = function(...rest) {
+			var sum = 0;
+			for(let n of rest) {
+				sum +=n;
+			}
+			return sum;	
+		};
+
+		如果我们对这个函数进行测试，可以写一个test.js,然后使用node.js提供的assert模块进行断言
+
+		const assert = require('assert');
+		const sum = require('./hello');
+
+		assert.strictEqual(sum(0),0);
+		assert.strictEqual(sum(1),1);
+		assert.strictEqual(sum(1,2),3);
+
+		assert模块非常简单，它断言一个表达式为true.如果断言失败，就抛出error.
+
+   mocha test
+
+		hello-test/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- hello.js <-- 待测试js文件
+		|
+		+- test/ <-- 存放所有test
+		｜ ｜
+		|  +- hello-test.js <-- 测试文件
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+   我们首先在package.json中添加mocha的依赖包。和其他的包依赖包，这次我们并没有把依赖包添加到“dependencies”和“devDependencies”
+
+		{
+  			...
+
+  			"dependencies": {},
+  			"devDependencies": {
+    		"mocha": "3.0.2"
+  		}
+		}
+
+		如果一个模块在运行的时候并不需要，仅仅是开发的时候才用。就可以放到devDependencies中。这样，正式打包发布的时候，devDependencies的包不会被包含进来。然后使用npm install进行安装（尽量不要全局安装，会影响到所有的node.js的工程）	
+
+		hello-test.js的内容如下：
+
+		const assert = require('assert');
+
+		const sum = require('../hello');
+
+		describe('#hello.js', () => {
+
+    		describe('#sum()', () => {
+        		it('sum() should return 0', () => {
+            		assert.strictEqual(sum(), 0);
+        		});
+
+        		it('sum(1) should return 1', () => {
+            		assert.strictEqual(sum(1), 1);
+        		});
+
+        		it('sum(1, 2) should return 3', () => {
+            		assert.strictEqual(sum(1, 2), 3);
+        		});
+
+        		it('sum(1, 2, 3) should return 6', () => {
+            		assert.strictEqual(sum(1, 2, 3), 6);
+        		});
+    		});
+		});
+
+		这里我们使用mocha默认的BDD-style的测试。describe可以任意的嵌套，以便把相关的测试看成一组测试：
+
+   运行测试：
+
+		在package.json中添加npm命令：
+
+		{
+  			...
+
+  			"scripts": {
+   			"test": "mocha"
+  			},
+
+  			...
+		}
+
+		然后在命令行：
+
+		C:\...\hello-test> npm test
+
+		另一种：在vs code中创建配置文件.vscode/launch.json
+
+		{
+    		"version": "0.2.0",
+    		"configurations": [
+        		{
+            		"name": "Run",
+            		"type": "node",
+            		"request": "launch",
+            		"program": "${workspaceRoot}/hello.js",
+            		"stopOnEntry": false,
+            		"args": [],
+            		"cwd": "${workspaceRoot}",
+            		"preLaunchTask": null,
+            		"runtimeExecutable": null,
+            		"runtimeArgs": [
+                		"--nolazy"
+            		],
+            		"env": {
+                		"NODE_ENV": "development"
+            		},
+            		"externalConsole": false,
+            		"sourceMaps": false,
+            		"outDir": null
+        		},
+        		{
+            		"name": "Test",
+            		"type": "node",
+            		"request": "launch",
+            		"program": "${workspaceRoot}/node_modules/mocha/bin/mocha",
+            		"stopOnEntry": false,
+            		"args": [],
+            		"cwd": "${workspaceRoot}",
+            		"preLaunchTask": null,
+            		"runtimeExecutable": null,
+            		"runtimeArgs": [
+                		"--nolazy"
+            		],
+            		"env": {
+                		"NODE_ENV": "test"
+            		},
+            		"externalConsole": false,
+            		"sourceMaps": false,
+            		"outDir": null
+        		}
+    		]
+			}
+
+		注意第一个配置选项run是正常执行一个js文件，第二个配置文件test我们填入"program": "${workspaceRoot}/node_modules/mocha/bin/mocha",并设置env为"NODE_ENV": "test",这样就可以在vs code中打开debug面板，选择test，运行，就能看到运行的结果。
+
+		before和after
+		
+		在测试前初始化资源，测试后释放资源是非常常见的。mocha提供了before、after、beforeEach和afterEach来实现这些功能
+
+		修改hello-test.js
+		
+
+		const assert = require('assert');
+		const sum = require('../hello');
+
+		describe('#hello.js', () => {
+    		describe('#sum()', () => {
+        		before(function () {
+            		console.log('before:');
+        		});
+
+        		after(function () {
+            		console.log('after.');
+        		});
+
+        		beforeEach(function () {
+            		console.log('  beforeEach:');
+        		});
+
+        		afterEach(function () {
+            		console.log('  afterEach.');
+        		});
+
+        		it('sum() should return 0', () => {
+            		assert.strictEqual(sum(), 0);
+        		});
+
+        		it('sum(1) should return 1', () => {
+            		assert.strictEqual(sum(1), 1);
+        		});
+
+        		it('sum(1, 2) should return 3', () => {
+            		assert.strictEqual(sum(1, 2), 3);
+        		});
+
+        		it('sum(1, 2, 3) should return 6', () => {
+            		assert.strictEqual(sum(1, 2, 3), 6);
+        		});
+    		});
+		});
+
+		再次运行会看到结果，每个test执行前后会分别执行beforeEach()和afterEach(),以及一组test执行前后会分别执行before()和after()
+
+			 #hello.js
+    		#sum()
+		before:
+	  		beforeEach:
+	      		✓ sum() should return 0
+	  		afterEach.
+	  		beforeEach:
+	      		✓ sum(1) should return 1
+	  		afterEach.
+	  		beforeEach:
+			    ✓ sum(1, 2) should return 3
+			afterEach.
+			beforeEach:
+			    ✓ sum(1, 2, 3) should return 6
+			afterEach.
+		after.
+		  4 passing (8ms)
+
+#####异步测试
+
+   hello.js
+
+		const fs = require('mz/fs');
+
+		module.exports = async () => {
+			let expression = await fs.readFile('./data.txt', 'utf-8');
+			let fn = new Function('return' + expression);
+			let r = fn();
+			console.log('Calculate: ${expression} = ${r}');
+			return r;
+		};
+
+		这个async函数通过读取data.txt的内容获取表达式，这样它就变成了异步。（1 + (2 + 4)）
+
+		在package.json中添加依赖包
+
+		"dependencies": {
+    		"babel-core": "6.13.2",
+    		"babel-polyfill": "6.13.0",
+    		"babel-preset-es2015-node6": "0.3.0",
+    		"babel-preset-stage-3": "6.5.0",
+    		"mz": "2.4.0"
+		},
+
+		紧接着在test目录中添加一个await-test.js,测试hello.js的async函数
+
+		测试异步函数，我们要传入的函数需要带一个参数，通常命名为done:
+
+		it('test async function', fuction (done) {
+			fs.readFile('filepath', function (err, data) {
+				if(err) {
+					done(err);
+				} else {
+					done();
+				}
+			});
+		});
+
+		测试异步函数需要在函数内部手动调用done()表示测试成功，done(err)表示测试出错
+
+		对于用es7的async编写的函数，我们可以这样写：
+
+		it('#async with done', (done) => {
+			(async function () {
+				try {
+					let r = await hello();
+					assert.strictEqual(r, 15);
+					done();
+				} catch (err) {
+					done(err);
+				}
+			})();
+		});
+
+		因为用try...catch比较麻烦，所以可以直接将其当做同步函数俩测试
+
+		it('#async function', async () => {
+			let r = await hello();
+			assert.strictEqual(r, 15);
+		});
+
+		工程目录的结构如下：
+
+		async-test/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- hello.js <-- 待测试js文件
+		|
+		+- data.txt <-- 数据文件
+		|
+		+- test/ <-- 存放所有test
+		｜ ｜
+		|  +- await-test.js <-- 异步测试
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+		现在运行mocha,会得到SyntaxError.这是因为mocha会启动node.js进程，然后运行测试，但是这个过程并没有加载babel转换器，因此遇到async和await关键字就会报错。
+
+		测试一：  解决的方法是让mocha在测试前加载babel即可，mocha提供了一个命令行参数 --require可以加载指定的包。我们可以编写一个hook.js
+
+		require('babel-core/register')({
+			presets: ['stage-3']
+		});
+
+		然后在命令窗口命令node_modules\mocha\bin\mocha --require hook
+
+		测试二：  package.json中把script改为：
+
+		"scripts": {
+			"test": "mocha"
+		}
+
+		这样就可以在命令行窗口通过npm test执行测试
+
+		测试三：  在VS code配置文件中把args改为：
+
+		"args": [
+			"-require",
+			"hook"
+		]				
+
+		这样就可以在VS CODE中直接运行测试了
+
+		编写异步代码的时候我们坚持使用async和await关键字，这样编写测试也同样简单
+
+#####WebSocket
+
+	其为HTML5新增的协议，它的目的是在浏览器和服务器之间建立一个不受限的双向的通信的通道。比如说，服务器可以在任意时刻发消息给浏览器。全双工
+
+	传统的HTTP协议是一个请求一响应的协议，请求必须先由浏览器发给服务器，服务器才能响应这个请求，再把数据发送给浏览器。换句话说，如果，浏览器不主动请求，服务器是没有办法主动发数据给浏览器的。
+
+	这样在浏览器中搞一个实时聊天，只能借助flash这些插件
+
+	http协议的轮询或者comet.轮询是指浏览器通过javascript启动一个定时器，然后以固定的间隔给服务器发送请求，询问服务器有没有新消息，这样的机制缺点是  实时性不高  频繁的请求会给服务器带来极大的压力
+
+	Comet本质上也是轮询，但是在没有消息的情况下，服务器先拖一段时间，等到有消息了再回复。这个机制暂时地解决了实时性问题，但是它带来了新的问题：以多线程模式运行的服务器会让大部分线程大部分时间都处于挂起状态，极大地浪费服务器资源。另外，一个HTTP连接在长时间没有数据传输的情况下，链路上的任何一个网关都可能关闭这个连接，而网关是我们不可控的，这就要求Comet连接必须定期发一些ping数据表示连接“正常工作”。
+
+	
+
+   websocket协议：
+
+		websocket并不是全新的协议，而是利用HTTP协议来链接：
+
+		首先由websocket链接必须由浏览器发起，因为请求协议是一个标准的 http请求，格式如下：
+
+		GET ws://localhost:3000/ws/chat HTTP/1.1
+		Host: localhost
+		Upgrade: websocket
+		Connection: Upgrade
+		Origin: http://localhost:3000
+		Sec-WebSocket-Key: client-random-string
+		Sec-WebSocket-Version: 13
+
+	这请求和普通的HTTP请求有几点的不同：
+
+		1.GET请求的地址不是类似/path/,而是以ws://开头的地址
+		2.请求头Upgrade: websocket和connection: Upgrade表示这个链接将要被转换为WebSocket连接
+		3.Sec-WebSocket-Key是用于标识这个链接，并非用于数据加密
+		4.Sec-WebSocket-Version指定了WebSocket的协议版本
+
+		随后服务器接收该响应，就会返回如下响应：
+
+		HTTP/1.1 101 Switching 	Protocols
+		Upgrde: websocket
+		Connection: Upgrade
+		Sec-WebSocket-Accept: server-random-string
+
+		这次响应代码101，表示本次链接的HTTP响应即将被更改，更改后的协议是Upgrade: websocket指定的WebSocket协议。
+
+		版本号和子协议规定了双方能够理解的数据格式，以及是否支持压缩等等，如果仅仅使用websocket的API，就不需要关心这些
+
+		消息有两种，一种是文本，一种是二进制数据。通常我们可以发送JSON格式的文本，这样在浏览器处理起来就非常的方便。
+
+		安全的websocket链接机制和https类似，首先浏览器用wss://xxx创建websocket链接时，会首先通过HTTPS创建安全的链接，然后升级为websocket连接，底层的通信协议仍然是安全的SSL/TLS协议
+
+   服务器：由于websocket是一个协议，服务器如何实现，取决于所采用的编程语言和框架本身。NODE.js本身支持的协议包括TCP协议和HTTP协议，要支持websocket协议，需要对httpserver做额外的开发。已经有若干的基于node.js的websocket实现，我们可以直接用npm进行安装即可
+
+#####使用ws
+
+   要使用websocket关键在于服务器端的支持，这样我们才可以，有可能支持websocket的浏览器使用websocket
+
+	WS模块：
+
+	在node.js中使用最广泛的就是websocket模块就是ws,我们创建一个hello-ws的VS Code工程，然后在package.json中添加ws的依赖：
+
+		"dependencies": {
+			"ws": "1.1.1"
+		}
+
+	工程架构：
+		hello-ws/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- app.js <-- 启动js文件
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+		
+		创建一个websocket的服务器实例非常容易：
+
+		const WebSochet = require('ws');
+		const WebSocketServer = WebSocket.Server;
+
+		const wss = new WebSocketServer({
+			port: 3000
+		});
+
+		这样我们就在3000端口打开了一个WebSocket Server，该实例变量wss引用
+
+		接下来，如果有WebSocket请求接入，wss对象可以相应connection事件来处理这个WebSocket:
+
+		wss.on('connection', function (ws) {
+			console.log('[SERVER] connection()');
+			ws.on('message', function (message) {
+				console.log('[SERVER] Received: ${message}');
+				ws.send('ECHO: ${message}', err => {
+					if (err) {
+						console.log('[SERVER] error: ${err}');
+					}
+				});
+			})
+		});
+
+		在connection事件中，回调函数会传入一个websocket的实例，表示这个websocket的连接。对于每一个websocket的链接，我们都要对她绑定某些事件方法来处理不同的事件，这里我们通过响应message事件，在收到消息之后再返回一个ECHO:xxx的消息给客户端
+
+   创建websocket链接
+
+		现在这个简单的服务端的websocket程序就编写好了，如何真正的创建websocket并且给服务器发消息呢。是在浏览器中写JavaScript代码
+
+		现在vs code中执行app.js。然后在当前页面下，直接打开JavaScript代码的浏览器的Console,一次输入代码：
+	
+		var ws = new WebSocket('ws://localhost:3000/test');
+
+		ws.onmessage = function(msg) {console.log(msg);};
+
+		ws.send('Hello!');
+
+		可以看到Console的输出如下:
+
+		MessageEvent {isTrusted: true, data: "ECHO: Hello!", origin: "ws://localhost:3000", lastEventId: "", source: null…}
+
+		这样我们就在浏览器中成功的接收了服务器发送的消息
+
+		我们还可以直接用ws模块提供的WebSocket来充当客户端。换句话说，ws模块既包含了服务器端又包含了客户端
+
+		ws的WebSocket就表示客户端，它其实是WebScoketServer响应的connection事件时回调函数传入的变量ws的类型
+
+		客户端的写法如下：
+
+		let ws = new WebSocket('ws://localhost:3000/test');	
+		
+		ws.on('open', function () {
+			console.log('[CLIENT] open()');
+			ws.send('Hello!');
+		});
+
+		ws.on('message', function (message) {
+			console.log('[CLIENT] Received: ${message}');
+		});
+
+		在node环境下，ws模块的客户端可以用于测试服务器端的代码，否则每次都必须在浏览器执行javascript代码
+
+   同源策略：
+
+		从上面的测试可以看出，WebSocket协议本身不要求同源策略（Same-origin Policy），也就是某个地址为http://a.com的网页可以通过WebSocket连接到ws://b.com。但是，浏览器会发送Origin的HTTP头给服务器，服务器可以根据Origin拒绝这个WebSocket请求。所以，是否要求同源要看服务器端如何检查
+
+   路由：
+
+
+		还需要注意到服务器在响应connection事件时并未检查请求的路径，因此，在客户端打开ws://localhost:3000/any/path可以写任意的路径。
+
+#####编写聊天室
+
+		要真正创建WebSocket应用，首先的有一个基于MVC的Web应用，也就是我们在前面用的koa2和Nunjucks创建的Web.在此基础上，把Websocket添加进来，就可以了
+
+		首先把前面编写的MVC工程复制一份;
+
+		ws-with-koa/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- controllers/ <-- Controller
+		|
+		+- views/ <-- html模板文件
+		|
+		+- static/ <-- 静态资源文件
+		|
+		+- app.js <-- 使用koa的js
+		|
+		+- start.js <-- 启动入口js
+		|
+		+- controller.js <-- 扫描注册Controller
+		|
+		+- static-files.js <-- 处理静态文件
+		|
+		+- templating.js <-- 模版引擎入口
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+		把需要的依赖的包添加进来
+
+		"dependencies": {
+		    "babel-core": "6.13.2",
+		    "babel-polyfill": "6.13.0",
+		    "babel-preset-es2015-node6": "0.3.0",
+		    "babel-preset-stage-3": "6.5.0",
+		    "ws": "1.1.1",
+		    "koa": "2.0.0",
+		    "koa-bodyparser": "3.2.0",
+		    "koa-router": "7.0.0",
+		    "nunjucks": "2.4.2",
+		    "mime": "1.3.4",
+		    "mz": "2.4.0"
+		}
+
+		使用npm进行安装，我们得到一个标准的基于MVC的koa2应用。该应用的核心是一个代表koa应用的app变量
+
+		const app new koa();
+
+		app.listen(3000);
+
+		koa通过3000端口响应HTTP，我们要新加的WebSocketServer还可以使用3000吗?
+
+		可以，统一使用有好处：
+		1：实际应用中，HTTP和WebSocket都使用标准的80和443端口，不需要暴露新的端口，也不需要修改防火强规则
+
+		实际上3000端口并非由koa监听，而是koa调用node标准的http模块创建的http.server监听的。koa只是把响应函数注册到http.server中。类似的，websocketserver也可以把自己的响应函数注册到http.server中，这样，同一个端口，根据协议，可以分别由koa和ws进行处理了
+
+		把websocketserver绑定到同一个端口的关键代码是先获取koa创建的http.server的引用，再根据http.server创建websocketserver:
+
+		let server = app.listen(3000);
+
+		let wss = new WebSocketServer({
+			server: server
+		});
+
+		要始终注意到，浏览器创建的websocket时发送的仍然是标准的HTTP请求。无论是websocket请求还是普通的http请求。都会被http.server处理。具体的处理方式则是由koa和websocketserver注入的回调函数实现的。websocketserver会首先判断请求是不是WS请求，如果是，它将处理该请求，如果不是，该请求由koa处理
+
+
+		在koa中可以很容易的认证用户，通过session或者cookie，但是在响应websocket请求时，怎样识别用户身份。
+
+		一个简单的方案是把用户登录后的身份写入到Cookie，在koa中，可以使用middleware解析Cookie，把用户绑定到ctx.state.user上。
+
+		ws请求也是标准的http请求，所以服务器也会把cookie发送过来，这样我们我们用websocketserver处理ws请求时，就可以根据cookie识别用户身份
+
+		先把识别用户的身份逻辑提取为一个单独的函数：
+
+		function parseUser(obj) {
+			if (!obj) {
+				return;
+			}
+	
+			console.log('try parse: ' + obj);
+			let s = '';
+			if(tpeof obj ==='string') {
+				s = obj;
+			} else if(obj.headers) {
+				let cookies = new Cookies(obj, null);
+				s = cookies.get('name');
+			}
+			if(s) {
+				try{
+					let user = JSON.parse(Buffer.form(s, 'base64').toString());
+					console.log('User: ${user.name}, ID: ${user.id}');
+					return user;
+				} catch (e) {
+					//ignore
+				}
+			}
+		}
+
+		该Cookie并没有做hash处理，实际上它就是一个JSON字符串
+
+		在koa的middleware中，我们很容易识别用户：
+
+		app.use(async (ctx, next) => {
+			ctx.state.user = parseUser(ctx.cookie.get('naem') || '');
+			await next();
+		});
+
+		在WebSocketServer中，就需要响应connection事件，然后识别用户：
+
+		wss.on('connection', function (ws) {
+			let user = parseUser(ws.upgradeReq);
+			if(!user) {
+				ws.close(4001, 'Invalid user');
+			}
+			ws.user = user;
+			ws.wss = wss;
+		});
+
+		紧接着我们对每个创建成功的WebSocket绑定message  close  error等事件处理函数。对于聊天应用来说。每收到一条消息，就需要把该消息广播到所有的WebSocket连接上。
+
+		先为一个wss对象添加一个broadcast()方法：
+
+		wss.broad = function (data) {
+			wss.clients.forEach(function (client) {
+				client.send(data);
+			});
+		}
+
+		在某个WebSocket接收到消息之后，就可以调用wss.broadcast()进行广播了：
+
+		ws.on('message', function (message) {
+			console.log(message);
+			if(message && message.trim()) {
+				let msg = createMessage('chat', this.user, message.trim());
+				this.wss.broadcast(msg);
+			}
+		});
+
+		消息的种类有很多但是不一定就是聊天信息，还可以获取用户列表，用户加入，用户退出等多种消息。所以我们用createMessage()创建一个JSON格式的字符串，发送给浏览器，浏览器端的javascript就可以直接使用了
+
+		var messageIndex = 0;
+
+		function createMessage(type, user, data) {
+			messageIndex ++;
+			return JSON.stringify({
+				id: messageIndex,
+				type: type,
+				user: user,
+				data: data
+			});
+		}
+
+		
+   编写页面：
+
+		相比于服务器端的代码,javascript代码会更加复杂
+
+		分为左侧会话列表和右侧用户列表
+
+		这里的DOM需要动态的更新，因此状态管理员是页面逻辑的核心
+
+		为了简化状态管理，我们使用vue控制左右两个列表
+
+		var vmMessageList = new Vue({
+			el: '#message-list',
+			data: {
+				message: []
+			}
+		});
+
+		var vmUserList = new Vue([
+			el: '#user-list',
+			data: {
+				users: []
+			}
+		]);
+
+		回话列表和用户列表初始化为空数组
+
+		紧接着，创建WebSocket连接，响应服务器消息，并且更新会话列表和用户列表
+
+		var ws = new WebSocket('ws://localhost:3000/ws/chat');
+
+		ws.onmessage = function(event) {
+			var data = event.data;
+			console.log(data);
+			var msg = JSON.parse(data);
+			if (msg.type ==='list') {
+				vmUserList.users = msg.data;
+			} else if (msg.type === 'join') {
+		        addToUserList(vmUserList.users, msg.user);
+		        addMessage(vmMessageList.messages, msg);
+		    } else if (msg.type === 'left') {
+		        removeFromUserList(vmUserList.users, msg.user);
+		        addMessage(vmMessageList.messages, msg);
+		    } else if (msg.type === 'chat') {
+		        addMessage(vmMessageList.messages, msg);
+		    }
+		};
+
+		这样JavaScript负责更新状态，vue负责根据状态刷新DOM。以用户列表为例：代码如下HTML：
+
+			<div id="user-list">
+			    <div class="media" v-for="user in users">
+			        <div class="media-left">
+			            <img class="media-object" src="/static/user.png">
+			        </div>
+			        <div class="media-body">
+			            <h4 class="media-heading" v-text="user.name"></h4>
+			        </div>
+			    </div>
+			</div>
+					
+
+		配置反向代理：
+
+		如果网站配置了反向代理，例如Ngix，则HTTP和WebSocket都必须通过反向代理连接Node服务器。Http的反向代理非常简单，但是要正常连接websocket，代理服务器必须支持websocket协议
+
+		首先要保证Ngix的版本>=1.3,然后通过proxy_set_header指令，设定：
+
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "upgrade";
+
+		配置文件如下：
+
+		server {
+		    listen      80;
+		    server_name localhost;
+		
+		    # 处理静态资源文件:
+		    location ^~ /static/ {
+		        root /path/to/ws-with-koa;
+		    }
+		
+		    # 处理WebSocket连接:
+		    location ^~ /ws/ {
+		        proxy_pass         http://127.0.0.1:3000;
+		        proxy_http_version 1.1;
+		        proxy_set_header   Upgrade $http_upgrade;
+		        proxy_set_header   Connection "upgrade";
+		    }
+		
+		    # 其他所有请求:
+		    location / {
+		        proxy_pass       http://127.0.0.1:3000;
+		        proxy_set_header X-Real-IP $remote_addr;
+		        proxy_set_header Host $host;
+		        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		    }
+		}
+
+#####REST
+
+   WEB API
+		
+		如果一个URL返回的不是HTML而是机器能直接解析的数据，这个URL就可以看成是一个web api
+
+   rest就是一种设计API的模式。最常用的数据格式是JSON。由于JSON能直接被javascript读取，所以JSON风格编写 的REST风格 的API具有简单，易读，易用的特点
+
+		通过api操作数据，可以极大地把前端和后端的代码隔离，使得后端代码易于测试，前端代码编写更加简单
+		
+   当一个web应用以API的形式对外提供功能的时候，整个应用 的框架可以扩展为：
+
+		客户端->REST API->管理接口（后台系统）
+
+#####编写REST API
+
+   REST API规范：
+
+		编写REST API, 实际上就是编写处理HTTP请求的async函数，不过REST请求和普通的HTTP请求有几个特殊的地方：
+
+		1.REST请求仍然是标准的HTTP请求，但是，除了GET请求外，POST PUT等请求的body是JSON数据格式，请求的Content-Type为application/json;
+
+		2.REST响应返回的结果是JSON数据格式，因此响应的Content-Type也是application/json
+
+   REST规范定义了资源的通用访问格式，虽然它不是一个强制要求，但遵守规范可以让人易于理解
+
+		例如：商品的Product就是一种资源，获取所有的Product的URL如下：
+
+		GET/api/products
+
+		而获取某个指定的Product,例如，id为123的Product,其URL如下：
+
+		GET/api/products/123
+
+		新建一个Product使用POST请求，JSON数据包含在body中，URL使用如下，
+
+		POST/api/products
+
+		更新一个Product使用PUT请求，例如更新一个id为123的Product,其URL如下
+
+		PUT/api/products/123
+
+		删除一个Product使用DELETE请求，例如，删除一个ID为123的product
+
+		DELETE/api/products/123
+
+		资源还可以按层次组织。例如获取Product 的所有的评论，使用
+
+		GET/api/products/123/reviews
+
+		我们还可以只需要获取部分数据时，可以通过参数限制返回结果集，例如返回第二页的评论，每页10项，按时间排序
+
+		GET/api/products/123/reviews?pages=2&size=10&sort=time
+
+   koa处理REST
+
+    既然我们可以使用koa作为web框架处理http请求，因此我们仍然可以在koa中响应并处理REST请求
+
+		新建一个rest-hello工程
+
+		rest-hello/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- controllers/
+		|  |
+		|  +- api.js <-- REST API
+		|
+		+- app.js <-- 使用koa的js
+		|
+		+- start.js <-- 启动入口js文件
+		|
+		+- controller.js <-- 扫描注册Controller
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+		package.json
+
+		"dependencies": {
+		    "babel-core": "6.13.2",
+		    "babel-polyfill": "6.13.0",
+		    "babel-preset-es2015-node6": "0.3.0",
+		    "babel-preset-stage-3": "6.5.0",
+		    "koa": "2.0.0",
+		    "koa-bodyparser": "3.2.0",
+		    "koa-router": "7.0.0"
+		}
+
+		运行使用npm install进行安装
+
+		在app.js中，我们仍然使用标准的koa组件，并自动扫描加载controllers目录下的所有的js文件
+
+		const app = new Koa();
+
+		const controller = require('./controller');
+		
+		app.use(bodyParser);
+
+		app.use(controller());
+		
+		app.listen(3000);
+
+		console.log('app started at port 3000...');
+
+		注意到app.use(bodyParser());这个语句，它给koa安装了一个解析HTTP请求body的处理函数，如果HTTP请求是JSON数据，我们就可以通过ctx.request.body直接访问解析后的javascript对象
+
+		下面我们编写api.js，添加一个GET请求：
+
+		var products = [{
+			name: 'iphone',
+			price: 6999
+		},{
+			name: 'kindle',
+			price: 999
+		}];
+
+		module.exports = {
+			'GET/api/products': async (ctx, next) => {	
+				ctx.response.type = 'application/json';
+				ctx.response.body = {
+					products: products
+				};
+			}
+		}
+
+		在koa 中，我们只需要给ctx.response.body赋值一个javascript对象，koa就会自动把该对象序列化为JSON并输出到客户端
+
+		我们在浏览器中访问http://localhost:3000/api/products,可以得到如下 的输出
+
+		{"products":[{"name":"iphone","price":6999},{"name":"kindle","price":999}]}
+
+
+		紧接着我们可以添加一个创建Product的api:
+
+		module.exports = {
+			'GET/api/products': async (ctx, next) => {
+				...
+			},
+			'POST/api/products': async (ctx, next) => {
+				var p = {
+					name: ctx.request.body.name,
+					price: ctx.request.body.price
+				};
+				products.push(p);
+				ctx.response.type = 'application/json';
+				ctx.response.body = p;
+			}
+		}
+
+		这个POST请求无法在浏览器中直接测试，但是我们可以通过curl命令在命令提示符窗口测试这个API，我们输入一下命令：
+
+		curl -H 'Content-Type: application/json' -X POST -d '{"name":"XBox","price":3999}' http://localhost:3000/api/products
+
+		得到的返回的内容如下：
+
+		{"name":"XBox","price":3999}
+
+		我们再在浏览器中访问http://localhost:3000/api/products，可以得到更新后的输出：
+
+		{"products":[{"name":"iPhone","price":6999},{"name":"Kindle","price":999},{"name":"XBox","price":3999}]}
+
+		可见在koa中处理rest请求是非常简单的，bodyParser()这个middleware可以解析请求的JSON数据并绑定到ctx.request.body上，输出JSON时我们先指定ctx.response.type = 'application/json',然后把javascript对象赋值给ctx.response.body就完成了REST请求
+
+#####开发REST API
+
+		其实，使用REST和使用mvc是类似的，不同的是，提供REST的Controller处理函数最后不调用render()去渲染模板，而是把结果直接用JSON序列化返回给客户端。
+
+		问题一：
+
+		如何组织URL？
+
+		一个简单的方法是通过固定的前缀进行区分  /static/表示静态资源   /api/开头的就是URL就是REST API,其他的URL就是普通的MVC请求
+
+		还可以使用子域名区分，对于大项目
+	
+		问题二：如何统一输出REST（我们可以通过一个middleware）给ctx添加一个rest()方法，直接输出JSON数据
+
+		由于我们给所有的REST API一个固定的URL前缀/api/，所以这个middleware还需要根据path来判断当前的请求是否是一个REST请求，如果是我们才给ctx绑定rest()方法
+
+		module.exports = {
+			restify: (pathPrefix) => {
+				//REST API前缀，默认为/api/:
+				pathPrefix = pathPrefix || '/api/';
+				return async (ctx, next) => {
+					if(ctx.response.path.startsWith(pathPrefix)) {
+						ctx.rest = (data) => {
+							ctx.response.type = 'application/json';
+							ctx.response.body = data;
+						}
+						await next();
+					} else {
+						await next();
+					}
+				};
+			}	
+		};
+
+		这样任何支持REST的异步函数只需要简单的调用：
+
+		ctx.rest({
+			data: 123
+		});
+
+		就完成了REST请求
+
+		第三类：如何处理错误：
+		
+		1.当REST API请求出错的时候，我们如何返回错误信息
+
+		2.当客户端收到REST响应后，如何判断是成功还是失败
+
+		在涉及到REST API错误的时候，一般分为两类
+
+		1.类似403 404 500等错误，这些错误实际上是HTTP请求可能发生的错诶。REST请求只是一种请求类型和响应类型均为JSON的HTTP请求，因此，这些错误在REST请求时也会发生。（针对这种错误，客户端除了提示出现网络错误，稍后重试，并无法获得具体的错误信息）
+
+		2.业务逻辑的错误，输入了不合法的的EMAIL地址，试图删除一个不存在的Product,等等。这种类型的错误完全可以通过JSON返回给客户端，这样客户端就可以根据提示用户的eamil不合法等，以便用户修复后从新请求API.
+
+
+		第一类错误实际上客户端可以识别，并且我们也无法操控HTTP服务器的错误码
+
+		第二类错误信息是一个JSON字符串
+
+		{
+			"code":"1000",
+			"message": "Bad email address"
+		}
+
+		但是web应用使用的200，这样客户端在识别出第一类错误之后，如果遇到200响应，则根据响应的JSON判断是否有错误，这种方式对于动态语言非常容易。
+
+		var result = JSON.parse(response.data);
+
+		if (result.code) {
+			alert(result.message);
+		} else {
+
+		}
+
+		对于静态语言就比较麻烦，有时候不得不做两次序列化，比如java:
+
+		APIError err = objectMapper.readValue(jsonString, APIError.class);
+		if (err.code == null) {
+		    // 没有错误，还需要重新转换:
+		    User user = objectMapper.readValue(jsonString, User.class);
+		} else {
+		    // 有错误:
+		}
+		
+		有的web应用对正确的REST响应使用200，对错误的REST响应使用400，这样，客户端即是静态语言，也可以根据HTTP响应码判断是否出错，出错时直接把结果反序列化为APIError对象
+
+		两种方式各有优劣：我们使用200表示成功，400表示失败响应
+		
+		注意：不能混合其他HTTP错误码。例如：使用401响应登录失败，使用403响应权限不够，这样会使的客户端无法有效的识别HTTP错误码和业务错误。其原因在于http协议定义的错误码十分偏底层，而REST API属于 高层协议 不应该复用底层的代码
+
+
+   如何定义错误码：
+
+		我们建议使用字符串作为错误码：
+
+		定义的REST API错误格式如下：
+
+		{
+			"code": "错误代码",
+			"message": "错误描述信息"
+		}
+
+		其中，错误代码命名规范为大类:子类，例如，口令不匹配的登录错误代码为auth:bad_password，用户名不存在的登录错误代码为auth:user_not_found。这样，客户端既可以简单匹配某个类别的错误，也可以精确匹配某个特定的错误。
+
+   如何返回错误;
+
+		错误在controller中抛出：更好的方式是异步函数直接用throw语句抛出错误，让middleware去处理错误
+
+		user = processLogin(username, password);
+		if (user != null) {
+			ctx.rest(user);
+		} else {
+			throw new APIError('auth:user_not_found','user not found');
+		}
+
+		这种方式可以在异步函数的任何地方抛出错误，包括调用的子函数的内部
+
+		我们修改一个middleware就可以处理错误
+
+		module.exports = {
+		    APIError: function (code, message) {
+		        this.code = code || 'internal:unknown_error';
+		        this.message = message || '';
+		    },
+		    restify: (pathPrefix) => {
+		        pathPrefix = pathPrefix || '/api/';
+		        return async (ctx, next) => {
+		            if (ctx.request.path.startsWith(pathPrefix)) {
+		                // 绑定rest()方法:
+		                ctx.rest = (data) => {
+		                    ctx.response.type = 'application/json';
+		                    ctx.response.body = data;
+		                }
+		                try {
+		                    await next();
+		                } catch (e) {
+		                    // 返回错误:
+		                    ctx.response.status = 400;
+		                    ctx.response.type = 'application/json';
+		                    ctx.response.body = {
+		                        code: e.code || 'internal:unknown_error',
+		                        message: e.message || ''
+		                    };
+		                }
+		            } else {
+		                await next();
+		            }
+		        };
+		    }
+		};
+
+		这种错误处理的好处是，不但简化了controller的错误处理，并且在遇到非APIError的错误时，自动转换错误码为internal:unknown_error.受益于async/await语法，我们可以在middleware中可以直接使用try...catch捕获异常
+		如果是callback模式，就无法用try...catch捕获，代码结构将混乱的多。
+
+		最后把APIError这个对象export出去
+
+
+   开发REST API
+
+		rest-hello
+
+		rest-koa/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- controllers/
+		|  |
+		|  +- api.js <-- REST API
+		|  |
+		|  +- index.js <-- MVC Controllers
+		|
+		+- products.js <-- 集中处理Product
+		|
+		+- rest.js <-- 支持REST的middleware
+		|
+		+- app.js <-- 使用koa的js
+		|
+		+- start.js <-- 启动入口js文件
+		|
+		+- controller.js <-- 扫描注册Controller
+		|
+		+- static-files.js <-- 支持静态文件的middleware
+		|
+		+- templating.js <-- 支持Nunjucks的middleware
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- views/ <-- Nunjucks模板
+		|
+		+- static/ <-- 静态资源文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+
+		在package.json的依赖包
+
+		"dependencies": {
+		    "babel-core": "6.13.2",
+		    "babel-polyfill": "6.13.0",
+		    "babel-preset-es2015-node6": "0.3.0",
+		    "babel-preset-stage-3": "6.5.0",
+		    "koa": "2.0.0",
+		    "koa-bodyparser": "3.2.0",
+		    "koa-router": "7.0.0"
+		    "nunjucks": "2.4.2",
+		    "mime": "1.3.4",
+		    "mz": "2.4.0"
+		}
+
+		运行npm install进行安装依赖包。我们在工程中做如下规范：
+
+		1.REST API的返回值全部是object对象，而不是简单的number boolean null 或者数组(方便客户端处理结果，否则反序列化后还要进行类型的判断)
+
+		2.REAT API必须使用前缀/api/
+
+   Service		
+		为了操作Product,我们用product.js封装所有的操纵，可以把它视为一个Service
+
+		var id = 0;
+		
+		function nextId() {
+			id++;
+			return 'p' + id;
+		}
+
+		function Product(name, manufacturer, price) {
+			this.id = nextId();
+			this.name = name;
+			this.manufacturer = maufacturer;
+			this.price = price;
+		}
+
+		var products = [
+			new Product('iphone7', 'Apple', 6000),
+			new product('ThinkPad T440', 'Lenovo', 5999),
+			new Product('LBP2900', 'Canon', 1099)
+		];
+
+		module.exports = {
+			getProducts: () => {
+				return products;
+			},
+
+			getProduct: (id) => {
+				var i;
+				for(i = 0; i < products.length; i++) {
+					if(products[i].id ===id){
+						return products[i];
+					}
+				}
+				return null;
+			},
+			
+			createProduct: (name, ,manufacturer, price) => {
+				var p = new Product(name, manufacturer, price);
+				products.push(p);
+				return p; 
+			},
+
+			deleteProduct: (id) => {
+				var 
+					index = -1,
+					i;
+				for (i = 0; i <products.length; i++) {
+					if (products[i].id ===id) {
+						index = 1;
+						break;
+					}
+				}
+				if (index >= 0) {
+					return products.splice(index, 1)[0];
+				}
+				return null;
+			}
+		};
+		
+			变量products相当于在内存中模拟了数据库，这里是为了简化逻辑。
+
+		API
+
+			紧接着我们编写api.js,并放到controllers目录下：
+
+			const products = require('../products');
+			const APIError = require('../rest').APIError;
+
+			module.exports = {
+				'GET/api/products' : async (ctx, next) => {
+					ctx.rest({
+						products: products.getProducts()
+					});
+				},
+				'POST /api/products': async (ctx, next) => {
+			        var p = products.createProduct(ctx.request.body.name, ctx.request.body.manufacturer, parseFloat(ctx.request.body.price));
+			        ctx.rest(p);
+			    },
+			
+			    'DELETE /api/products/:id': async (ctx, next) => {
+			        console.log(`delete product ${ctx.params.id}...`);
+			        var p = products.deleteProduct(ctx.params.id);
+			        if (p) {
+			            ctx.rest(p);
+			        } else {
+			            throw new APIError('product:not_found', 'product not found by id.');
+			        }
+			    }
+			};
+			
+			该API支持GET POST DELETE这三个请求。当然，还可以添加更多的API
+
+			编写API时，需要注意：
+
+			如果客户端传递了JSON格式的数据（例如，POST请求），则async函数可以通过ctx.request.body直接访问已经反序列化的javascript对象。这是由bodyParser()这个middleware完成的。如果ctx.request.body为undefined，说明缺少middleware,或者middleware没有正确的配置
+
+			如果API路径带有参数，参数必须用：表示，例如,DELETE/api/products/:id,客户端传递的URL可能就是/api/poducts/A001,参数id对应的值就是A001，要获得这个参数，我们用ctx.params.id.
+
+			类似的，如果API路径有多个参数，例如，/api/products/:pid/reviews/:rid,则这两个参数分别用ctx.params.pid和ctx.params.rid
+
+			这个功能由koa-router这个middleware提供。
+
+			API路径的参数永远是字符串
+
+			
+   MVC
+
+		有了API以后，我们就可以编写MVC，在页面上调用API完成操作。
+
+		先在controllers目录下创建index.js,编写页面入口函数：
+
+		module.sxports = {
+			'GET /': async (ctx, next) => {
+				ctx.render('index.html');
+			}
+		};
+
+		然后我们在views目录下创建index.html,编写javascript代码读取Products:
+
+		$(function () {
+			var vm = new Vue({
+				el:'#product-list',
+				data: {
+					products: []
+				}
+			});
+
+		$.getJSON('/api/products').done(function (data) {
+				vm.products = data.products;
+			}).fail(function (jqXHR, textStatus) {
+				alert('Error' + jqXHR.status);
+			});
+		});
+
+		与vm对应的HTML如下：
+
+		<table id="product-list" class="table table-hover">
+			<thead>
+				<tr>
+					<th style="width:150px"></th>
+					<th>Product</th>
+					<th style="width:150px">Price</th>
+				</tr>
+			</thead>
+			<tbody>
+		        <tr v-for="p in products">
+		            <td>
+		                <img class="media-object" style="width:40px; height:40px;" src="/static/images/icon.png">
+		            </td>
+		            <td>
+		                <h4 class="media-heading" v-text="p.name"></h4>
+		                <p><span v-text="p.manufacturer"></span></p>
+		            </td>
+		            <td>
+		                <p style="font-size:2em">¥ <span v-text="p.price"></span></p>
+		            </td>
+		        </tr>
+		    </tbody>
+		</table>
+
+		当products变化时，Vue会自动更新表格的内容
+
+		类似的，可以添加创建和删除product的功能，并且刷新变量products的内容，就可以实时更新Product列表
+
+		
+#####MVVM（model-view-viewmodel）
+		
+		MVVM最早由微软提出来，它借鉴了桌面应用程序的MVC思想，在前端页面中，把Model用纯JavaScript对象表示，View负责显示，两者做到了最大限度的分离。
+
+		把Model和View关联起来的就是ViewModel。ViewModel负责把Model的数据同步到View显示出来，还负责把View的修改同步回Model
+
+		看一下jquery和mvvm框架的区别：
+
+
+			<p>Hello, <span id="name">bart</span></p>
+			<p>You are<span id="age">12</span>.</p>
+		
+		jquery:
+			
+			'use strict';
+			var naem = 'Homer';
+			var age = 51;
+
+			$('#name').text(name);
+			$('#age').text(age);
+
+		MVVM:
+
+			var person = {
+				name: 'bart',
+				age: 12
+			};
+
+			'use strict';
+			person.name = 'Homer';
+			person.age = 51;
+
+
+#####单向绑定
+
+		MVVM就是在前端页面上，应用了扩展的MVC模式，我们关心Model的变化，MVVM框架自动把Model的变化映射到DOM结构上，这样，用户看到的页面内容就会随着Model的变化而更新。
+
+		MVVM框架：我们使用Vue.js
+
+		首先创建基于koa的Node.js项目。虽然目前我们只需要在HTML静态页面中编写MVVM,但是很快我们就需要和后端API进行交互，因此项目结构如下：
+
+		
+		hello-vue/
+		|
+		+- .vscode/
+		|  |
+		|  +- launch.json <-- VSCode 配置文件
+		|
+		+- app.js <-- koa app
+		|
+		+- start.js <-- 入口js
+		|
+		+- static-files.js <-- 支持静态文件的koa middleware
+		|
+		+- package.json <-- 项目描述文件
+		|
+		+- node_modules/ <-- npm安装的所有依赖包
+		|
+		+- static/ <-- 存放静态资源文件
+		   |
+		   +- css/ <-- 存放bootstrap.css等
+		   |
+		   +- fonts/ <-- 存放字体文件
+		   |
+		   +- js/ <-- 存放各种js文件
+		   |
+		   +- index.html <-- 使用MVVM的静态页面
+
+		node.js项目的主要目的是作为服务器端输出静态网页，因此package.json需要以下依赖包：
+
+		"dependencies": {
+		    "babel-core": "6.13.2",
+		    "babel-polyfill": "6.13.0",
+		    "babel-preset-es2015-node6": "0.3.0",
+		    "babel-preset-stage-3": "6.5.0",
+		    "koa": "2.0.0",
+		    "mime": "1.3.4",
+		    "mz": "2.4.0"
+		}
+
+		使用npm install
+
+		启动start.js,在index.html文件中随便写点内容，确保可以访问到。紧接着，在index.html中用Vue实现MVVM的一个简单的例子。
+
+		
+   安装Vue
+	
+		安装vue的方法有很多，可以用npm或者webpack。但是我们现在的目标是尽快用起来，所以最简单的方法就是直接用CDN进行引用：
+
+		<script src="https://unpkg.com/vue@2.0.1/dist/vue.js"></script>
+
+		也可以把vue.js下载下来，放到项目的/static/js文件夹中
+
+		<script src="/static/js/vue.js"></script>
+
+		真正开发的时候，应该使用压缩的版本vue.min.js
+
+   编写MVVM
+
+		下一步，我们就可以在HTML中编写JavaScript代码了。我们的model是一个Javascript对象，包含两个属性：
+
+		{
+			name: 'Robot',
+			age: 15
+		}
+
+		负责显示的是DOM节点可以用{{ name }} {{ age }}来引用model的属性：
+
+		<div>
+			<p>hello, {{ name }}!</p>
+			<p>You are {{ age }} years old!</p>
+		</div>
+
+		最后一步是用Vue把两者关联起来，要特别注意的是，在<head>内部编写的javascript代码，需要用jQuery把mVVM的初始化代码推迟到页面加载完毕之后执行，否则在<head>内执行MVVM代码时，DOM节点尚未被浏览器加载，初始化将失败。正确的写法如下：
+
+		<html>
+			<head>
+			
+				<!-- 引用jQuery -->
+				<script src="/static/js/jquery.min.js"></script>
+				
+				<!-- 引用Vue -->
+				<script src="/static/js/vue.js"></script>
+				
+				<script>
+				// 初始化代码:
+				$(function () {
+				    var vm = new Vue({
+				        el: '#vm',
+				        data: {
+				            name: 'Robot',
+				            age: 15
+				        }
+				    });
+				    window.vm = vm;
+				});
+				</script>
+			
+			</head>
+			
+			<body>
+			
+			    <div id="vm">
+			        <p>Hello, {{ name }}!</p>
+			        <p>You are {{ age }} years old!</p>
+			    </div>
+			
+			</body>
+		<html>
+
+		我们创建一个vm的核心代码如下：
+
+		var vm = new Vue({
+			el: '#vm',
+			data: {
+				name: 'Robot',
+				age: 15
+			}
+		});
+
+		其中el指定要把model绑定到那个DOM节点上，语法和jquery类似。这里的'#vm'对应的ID应为一个ID为vm的一个<div>节点：
+
+		<div id="vm">
+			...
+		</div>
+
+		该节点以及该节点内部，就是Vue可以操作的View.Vue可以自动把model的状态映射到VIew上，但是不能操作view范围之外的其他的DOM节点。
+
+		然后，data属性指定了model,我们初始化了model的两个属性name和age,在View的内部的<p>节点上，可以直接用 {{ name }}引用model 的某个属性
+
+		访问页面即可得到对应的输出。我们又把VM变量绑定到了window对象上，所以可以直接修改VM 的model：
+
+		window.vm.name = 'Bob'
+
+
+		vue作为MVVM框架会自动监听MODEL的任何变化，在model数据变化时，更新view的显示。这种model到view的绑定，我们称之为单向绑定。
+
+
+   单向绑定;
+
+		在vue中，可以直接写{{ name }}绑定某个属性。如果属性关联的是对象，还可以用多个.引用。例如：{{ address.zipcode }}
+
+		另一种单向绑定的方法是使用vue的指令v-text:
+
+		<p>Hello, <span v-text="name"></span>!</p>
+
+		这种写法是把指令写在HTML节点的属性上，它会被Vue解析，该节点的文本内容会被绑定为Model的指定属性，注意不能再写双花括号{{ }}
+
+
+#####双向绑定
+
+   单向绑定非常简单，就是把Model绑定到View，当我们用Javascript代码更新model的时候，View就会自动更新。
+
+		如果用户更新了view，model的数据也自动的被更新了，这种情况就是双向绑定：
+
+	用户更新view最简单的例子就是填写表单，填写表单时view的状态被更新了，mvvm框架可以自动更新model的状态。
+
+	在vue中使用双向绑定：
+
+	首先创建一个vm实例：
+
+	$(function () {
+		var vm = new Vue({
+			el: '#vm',
+			data: {
+				email: '',
+				name: ''
+			}
+		});
+		window.vm = vm;
+	});
+
+	然后编写一个HTML FORM表单，并用v-model指令把某个<input>和model的某个属性做双向绑定：
+
+	<form id="vm" action="javascrpit:void()">
+		<p><input v-model="email"></p>
+		<p><input v-model="name"></p>
+	</form>
+
+	我们可以在表单输入内容，然后在浏览器console中用window.vm.$data查看model的内容，也可以用window.vm.name查看model的属性，它的值和FORM表单对应的<input>是一致的。
+
+	除了<input type="text">可以和字符串类型的属性绑定外，其他类型的<input>也可以和相应的数据类型进行绑定：多个checkbox可以和数组进行绑定：
+
+	<label><input type="checkbox" v-model="language" value="zh">Chinese</label>
+
+	对应的model为
+
+		{
+			language: ['zh', 'en']
+		}
+
+	单个的checkbox可以和boolean类型变量绑定：
+
+	<input type="checkbox" v-model="subscribe">
+
+	model:
+
+	subscribe: true;
+
+		下拉框<select>绑定的是字符串，但是要注意，绑定的是value而非用户看到的文本：
+
+		<select v-model="city">
+			<option value="bj">Beijing</option>
+		</select>
+
+		model:
+		city: 'bj'
+
+		双向绑定的最大的好处就是我们不再需要用jquery去查询表单的状态，而是直接获得了用javascript对象表示的model
+
+   处理事件：
+
+	当用户提交表单时，传统的做法是响应onsubmit事件，然后用jquery获取表单内容，检查输入是否有效，最后提交表单，或者用AJAX提交表单。
+
+	现在获取表单内容已经不需要了，因为双向绑定直接让我们获得了表单内容，并且获得了合适的数据类型。响应onsubmit事件也可以放到VM中，我们在<form>中使用指令：
+
+	<form id="vm" v-on:submit.prevent="register">
+	
+	v-on:submit.prevent="register"指令就会自动监听submit事件，并调用register方法处理该事件。使用.prevent表示阻止事件冒泡，这样浏览器不再处理<form>的submit事件
+
+	因为我们指定了事件处理函数是register，所以需要在创建vm的时候添加一个register函数：
+
+		var vm = new Vue({
+			el: '#vm',
+			data: {
+				...
+			},
+			methods: {
+				register: function () {
+					alert(JSON.stringify(this.$data));
+					//AJAX
+				}
+			}
+		});		
+
+		在register()函数内部，我们可以用AJAX把JSON格式的Model发送给服务器，就完成了用户注册的功能。
+				
+
+
+
+			
+				
+
+			
+				
+
+
+		
+
+		
+		
+
+		
+		
+
+   
+
+	
+
+   
+
+	
+		
+
+			
+		
