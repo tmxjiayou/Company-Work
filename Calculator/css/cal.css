@@ -1,0 +1,17 @@
+	#t{ height:50px; width:250px;font-size:1.2cm;text-align:right}
+	.mr{ background-image:url('../image/mr.png')}
+	.ys{ background-image:url('../image/ys.png')}
+	.dj{ background-image:url('../image/dj.png')}
+	.fk{ background-image:url('../image/fk.png')}
+
+	html,body{
+    	width:100%;
+    	height:100%
+	}
+	body{
+ 	 font-family: "»ªÎÄÏ¸ºÚ";
+  	background:url("../image/bg.jpg") no-repeat;
+  	background-size: 100%;
+	}
+
+

@@ -1,0 +1,52 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>计算器</title>
+<link rel="stylesheet" type="text/css" href="css/cal.css">
+<script language="javascript" src="js/cal.js"></script>
+<body>
+<form id="myform"><br><br><br>
+	<p><h2 align="center">计算器</h2></P>
+	<table border="2" height="300px" width="255px" align="center" bgcolor="red">
+		<tr align="center">
+			<td colspan="4"><input type="text" id="t" value="0" onFocus="blur()"></td>
+		</tr>
+		<tr align="center">
+			<td><input type="button" id="b1" value="1" onclick="addNum(1)"></td>
+			<td><input type="button" id="b2" value="2" onclick="addNum(2)"></td>
+			<td><input type="button" id="b3" value="3" onclick="addNum(3)"></td>
+			<td><input type="button" id="b10" value="+" onclick="flagOp('+')"></td>
+		</tr>
+		<tr align="center">
+			<td><input type="button" id="b4" value="4" onclick="addNum(4)"></td>
+			<td><input type="button" id="b5" value="5" onclick="addNum(5)"></td>
+			<td><input type="button" id="b6" value="6" onclick="addNum(6)"></td>
+			<td><input type="button" id="b11" value="-" onclick="flagOp('-')"></td>
+		</tr>
+		<tr align="center">
+			<td><input type="button" id="b7" value="7" onclick="addNum(7)"></td>
+			<td><input type="button" id="b8" value="8" onclick="addNum(8)"></td>
+			<td><input type="button" id="b9" value="9" onclick="addNum(9)"></td>
+			<td><input type="button" id="b12" value="*" onclick="flagOp('*')"></td>
+		</tr>
+		<tr align="center"> 
+			<td><input type="button" id="b13" value="." onclick="getPoint()"></td>
+			<td><input type="button" id="b0" value="0" onclick="addNum(0)" ></td>
+			<td><input type="button" id="b14" value="√" onclick="getKaiFang()"></td>
+			<td><input type="button" id="b15" value="/" onclick="flagOp('/')"></td>
+		</tr>
+		<tr align="center">
+			<td><input type="button" id="b16" value="C" onclick="delC()"></td>
+			<td><input type="button" id="b17" value="CE" onclick="onClickCe()"></td>
+			<td><input type="button" id="b18" value="㎡" onclick="getPingFang()"></td>
+			<td><input type="button" id="b19" value="=" onclick="resNum()"></td>
+		</tr>
+		
+	</table>
+</form>
+</style>
+</body>
+<script language="javascript" src="js/bgcolor.js"></script>
+
+</html>
